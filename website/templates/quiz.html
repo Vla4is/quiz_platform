@@ -1,0 +1,21 @@
+{% extends "base.html" %} {% block title %} Quiz {% endblock %}
+{%block content %}
+
+<script>
+    document.getElementsByTagName ('body')[0].style.height = "auto"
+    document.getElementsByTagName ('body')[0].style.width = "auto"
+</script>
+
+    <form method="POST" class ="w-100 p-3">
+        <h2 class="msd">{{question}}</h2>
+        {%for answer in answers%}
+        
+        <button class="btn btn-outline-success mt-2 btn-block w-100 single_answer" onclick="clickOnAnswer ({{loop.index}})">{{answer.content}}</button>
+        <input type="hidden" name="single_answer" value='0'>
+        <script>resetDefault ("single_answer", {{loop.index}})</script>
+        {%endfor%}
+        <button type="submit" class="btn btn-primary btn-lg btn-block mt-2 " >Submit!</button>
+
+    </form>
+
+{% endblock %}

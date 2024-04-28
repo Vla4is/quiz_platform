@@ -1,0 +1,42 @@
+{% extends "base.html" %} {% block title %}Manage quizzes{% endblock %}
+{%block content %}
+<script>
+    document.getElementsByTagName ('body')[0].style.height = "auto"
+    document.getElementsByTagName ('body')[0].style.width = "auto"
+   
+    </script>
+
+<h1 class="msd">Manage quizzes</h1>
+
+{% for quiz in user.quizzes %}
+    <form class="border border-info m-3 p-3 rounded quiz" method="POST" >
+        <h4>{{quiz.title}}</h4>
+        <input type="text" class="form-control w-100 edit_name" name="edit_quizname" value="{{quiz.title}}" id ="edit_name">
+        <div class = "m-1"><label for="quiz_id">Quiz id:</label><input type="text" class ="form-control" name="quiz_id" value="{{quiz.id}}" readonly></div>
+        <div class="buttonset">
+        <button class="btn btn-outline-success m-1 submit_name" id ="submit_name" onclick="">Submit</button>
+        <button class="btn btn-outline-info m-1 editname_button" onclick ="editNameClick ({{loop.index}})" id="editname_button">Edit name</button>
+        <button class="btn btn-outline-info m-1 editquestions-button" onclick = "editQuestions({{quiz.id}})">Edit questions</button>
+        <button class="btn btn-outline-danger m-1 delete_button" onclick ="deleteQuiz ({{quiz.id}})">Delete</button>
+        </div> 
+        <button type="button" class="btn btn-success mt-2 btn-block resultsButton" onclick="goToQuizResults ({{quiz.id}})">Results</button>
+    
+    </form>
+    <script>defaultManageSettings ({{loop.index}})</script>
+    {%endfor%}
+
+
+<form action="" class ="w-100 p-3" method="post">
+    <input type="text" class="form-control w-100" name="quizname" placeholder="My quiz">
+    <button type="submit" class="btn btn-outline-success mt-2 btn-block">Add new quiz</button>
+    
+</form>
+
+
+
+
+
+{% endblock %}
+
+
+          

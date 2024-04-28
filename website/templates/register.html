@@ -1,0 +1,16 @@
+{% extends "base.html" %} {% block title %} Create an account {% endblock %}
+{%block content %}
+    <form action="" class ="" method="post">
+        <h1>Create an account</h1>
+        <label for="email" class="mt-1">Email address</label>
+        <input type="email" class="form-control" id="email" placeholder="name@example.com" name="email">
+
+        <label for="email" class="mt-1">Nickname</label>
+        <input type="text" class="form-control" id="nickname" placeholder="Quiz user" name="nickname">
+
+        <label for="password" class="mt-1">Password</label>
+        <input type="password" name="password" class="form-control" id="password" placeholder="Your Password">
+        <input type="password" class="form-control mt-1" id="validatepassword" name="validatepassword" placeholder="Repeat Password">
+        <button type="submit" class="btn btn-primary mt-2 btn-block">Create!</button>
+    </form>
+{%endblock%}

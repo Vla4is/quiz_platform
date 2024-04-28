@@ -1,0 +1,14 @@
+{% extends "base.html" %} {% block title %} Your result {% endblock %}
+{%block content %}
+
+<script>
+    document.getElementsByTagName ('body')[0].style.height = "auto"
+    document.getElementsByTagName ('body')[0].style.width = "auto"
+</script>
+
+    <div class ="w-100 p-3">
+        <h2 class = 'msd'>Reuslt for {{nickname}}#{{id}}</h2>
+        <h3 class="msd">Your score is: {{score}} of 10</h3>
+    </div>
+
+{% endblock %}

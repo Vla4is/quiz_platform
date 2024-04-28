@@ -1,0 +1,31 @@
+{% extends "base.html" %} {% block title %}{{quiz.title}} - results{% endblock %}
+{%block content %}
+
+<script>
+    document.getElementsByTagName ('body')[0].style.height = "auto"
+    document.getElementsByTagName ('body')[0].style.width = "auto"
+</script>
+
+<h1 class="msd">Results</h1>
+    
+        <h3>{{quiz.title}}</h3>
+        <button class="btn btn-outline-danger" onclick ="deleteResult('all', {{quiz.id}})">Delete all answers</button>
+        {%for result in results%}
+    <div class="sanswer" id="sanswer">
+        <div class="buttonset">
+        <div class ="resultsContent mr-2 border border-info rounded p-2">
+            <span class="h5">Nickname: {{result.nickname}}#{{result.id}}</span>
+            <span class="h5">Score: {{result.score}}</span>
+        </div>
+        <button class="btn btn-outline-danger" onclick ="deleteResult({{result.id}}, {{quiz.id}})">Delete</button>
+        </div> 
+
+    </div>
+        {%endfor%}
+    
+
+
+{% endblock %}
+
+
+          

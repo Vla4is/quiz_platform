@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for
+from flask import Blueprint, render_template, request, jsonify, redirect, url_for, session
 from flask_login import login_required, current_user
 from . import db
 from .helpers import DisplayMessages
@@ -11,7 +11,12 @@ quiz = Blueprint ('quiz', __name__)
 @login_required
 def manage ():
     forScripts = ""
-    quizOrder = 0
+
+    dm = DisplayMessages ()
+    if (session.get ('for_scripts')):
+        forScripts = session.get ('for_scripts')
+        session.clear ()
+
     if request.method == 'POST':
     
         if (request.form.get ("quizname")): #add new quiz
@@ -19,6 +24,8 @@ def manage ():
             newQuiz = Quiz (title = data, user_id = current_user.id)
             db.session.add (newQuiz)
             db.session.commit ()
+            forScripts = dm.green ("Quiz added successfully")
+
         elif (request.form.get ("edit_quizname")):
             quiz_id = request.form.get ("quiz_id")
             new_title = request.form.get ("edit_quizname")
@@ -26,6 +33,8 @@ def manage ():
             if quiz:
                 quiz.title = new_title
                 db.session.commit()
+                forScripts = dm.green ("Quiz edited successfully")
+
         else:
             dm = DisplayMessages ()
             forScripts = dm.red ("Wrong input")
@@ -34,8 +43,8 @@ def manage ():
 
 @login_required
 @quiz.route ('/delete-quiz', methods = ['POST'])
-def delete_note (): ##delete quiz
-    
+def delete_quiz (): ##delete quiz
+    dm = DisplayMessages ()
     quiz = json.loads (request.data)
     quizId = quiz ['quiz_id']
     quiz = Quiz.query.get (quizId)
@@ -44,12 +53,20 @@ def delete_note (): ##delete quiz
         if quiz.user_id == current_user.id:
             db.session.delete (quiz)
             db.session.commit()
+            session ['for_scripts'] = dm.green ("Quiz deleted successfully")
+            
     return jsonify({})
 
 @login_required
 @quiz.route ('/edit-questions', methods = ['POST', 'GET'])
 def edit_questions ():
     forScripts=""
+    dm = DisplayMessages ()
+
+    if (session.get ('for_scripts')):
+        forScripts = session.get ('for_scripts')
+        session.clear ()
+    
     quiz_id = request.args.get('quizid')
     # print(quiz_id)
     quiz = Quiz.query.get (quiz_id)
@@ -66,9 +83,9 @@ def edit_questions ():
                 new_question = Question (quiz_id = quiz_id, content = question, user_id = current_user.id)
                 db.session.add (new_question)
                 db.session.commit ()
+                session ['for_scripts'] = dm.green ("Question added successfully")
                 return redirect(url_for('quiz.edit_questions', quizid=quiz_id))
             else:
-                dm = DisplayMessages ()
                 forScripts = dm.red ("Wrong input")
             ###END OF ADD NEW QUIZ
         return render_template ("edit-questions.html", questions = questions, user = current_user, quiz_name = quiz.title, forScripts=forScripts)
@@ -77,6 +94,7 @@ def edit_questions ():
 @login_required
 @quiz.route ('/delete-question', methods = ['POST'])
 def delete_question ():
+    dm = DisplayMessages ()
     question = json.loads (request.data)
     question = question ['question_id']
     
@@ -85,11 +103,15 @@ def delete_question ():
     if question:
         db.session.delete (question)
         db.session.commit()
+        session ['for_scripts'] = dm.green ("Question deleted successfully")
+        
+
     return jsonify({})
 
 @login_required
 @quiz.route ('/update-question', methods = ['GET', 'POST'])
 def update_question ():
+    dm = DisplayMessages ()
     question = json.loads (request.data)
     new_content = question ['new_value']
     question_id = question ['question_id']
@@ -97,6 +119,7 @@ def update_question ():
     if question:       # Update the question title
         question.content = new_content
         db.session.commit()
+        session ['for_scripts'] = dm.green ("Question updated successfully")
 
     return jsonify({})
 
@@ -104,6 +127,12 @@ def update_question ():
 @quiz.route ('/edit-answers', methods = ['POST', 'GET'])
 def edit_answers (): #edit answers page
     forScripts=""
+
+    if (session.get ('for_scripts')):
+        forScripts = session.get ('for_scripts')
+        session.clear ()
+
+    dm = DisplayMessages()
     question_id = request.args.get('questionid') #Get the question id
     question = Question.query.get (question_id) #get the quiestion
     if (not question) or question.user_id != current_user.id: #redirect if there is no quiz like this
@@ -117,9 +146,9 @@ def edit_answers (): #edit answers page
                 new_answer = Answer (question_id = question_id, content = answer, user_id = current_user.id, correct = False) #creation of new answer
                 db.session.add (new_answer) #add this answer into the qerstions
                 db.session.commit () #commit the changes
+                session ['for_scripts'] = dm.green ("Answer added successfully")
                 return redirect(url_for('quiz.edit_answers', questionid=question_id))
             else: 
-                dm = DisplayMessages ()
                 forScripts = dm.red ("Wrong input")
             ###END OF ADD NEW QUIZ 
         return render_template ("edit-answers.html", answers = answers, user = current_user, question=question, forScripts=forScripts)
@@ -129,6 +158,7 @@ def edit_answers (): #edit answers page
 @login_required
 @quiz.route ('/change-answer-state', methods = ['POST', 'GET'])
 def change_answer_state ():
+    dm = DisplayMessages()
     
     question = json.loads (request.data)
     new_state = question ['new_state']
@@ -138,22 +168,27 @@ def change_answer_state ():
     if answer:       # Update the question title
         answer.correct = new_state
         db.session.commit()
+        session ['for_scripts'] = dm.green ("Answer updated successfully")
+
     return jsonify({})
 
 @login_required
 @quiz.route ('/delete-answer', methods = ['POST'])
 def delete_answer ():
+    dm = DisplayMessages()
     answer = json.loads (request.data)
     answer_id = answer ['answer_id']
     answer = Answer.query.get (answer_id)
     if answer and answer.user_id == current_user.id:
         db.session.delete (answer)
         db.session.commit()
+        session ['for_scripts'] = dm.green ("Answer deleted successfully")
     return jsonify({})
 
 @login_required
 @quiz.route ('/update-answer', methods = ['GET', 'POST'])
 def update_answer ():
+    dm = DisplayMessages()
     answer = json.loads (request.data)
     new_content = answer ['new_value']
     answer_id = answer ['answer_id']
@@ -161,12 +196,16 @@ def update_answer ():
     if answer and answer.user_id == current_user.id:       # Update the question title
         answer.content = new_content
         db.session.commit()
+        session ['for_scripts'] = dm.green ("Answer updated successfully")
     return jsonify({})
 
 @login_required
 @quiz.route ('/results', methods = ['GET', 'POST'])
 def results ():
     forScripts=""
+    if (session.get ('for_scripts')):
+        forScripts = session.get ('for_scripts')
+        session.clear ()
     quiz_id = request.args.get ("quizid")
     # print (quiz_id)
     quiz = Quiz.query.get (quiz_id)
@@ -174,11 +213,11 @@ def results ():
         return redirect(url_for('quiz.join'))
     else:
         db.session.commit()
-        return render_template ("results.html", user = current_user, results = quiz.results, quiz = quiz, forScripts="") # results = quiz.resutls, quizname = quiz.title
+        return render_template ("results.html", user = current_user, results = quiz.results, quiz = quiz, forScripts=forScripts) # results = quiz.resutls, quizname = quiz.title
     
 @quiz.route ('/delete-result', methods = ['GET', 'POST'])
 def delete_result (): #add here messages
-    
+    dm = DisplayMessages()
     quiz = json.loads (request.data)
     result_id = quiz ['result_id']
     quiz_id = quiz ['quiz_id']
@@ -197,8 +236,11 @@ def delete_result (): #add here messages
         if result_to_delete:
             db.session.delete(result_to_delete)
             db.session.commit()
+            session ['for_scripts'] = dm.green ("Result deleted successfully")
         elif result_id == "all":
             db.session.commit()
+            session ['for_scripts'] = dm.green ("Results deleted successfully")
+
         
     return jsonify({})
 

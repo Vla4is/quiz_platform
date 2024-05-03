@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from flask_login import login_required,  current_user
+from flask_login import current_user
 from .models import Quiz, Results
 from . import db
 from .helpers import CheckCredentials, DisplayMessages

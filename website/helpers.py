@@ -2,6 +2,7 @@ from . import db
 from .models import User
 import re
 
+
 class DisplayMessages:
     def green (self, message):
         return "Message.green(`{}`);".format(message)
@@ -10,11 +11,7 @@ class DisplayMessages:
     
 
 class CheckCredentials (DisplayMessages):
-    # def __init__(self):
-    #     super().__init__()  # Call the __init__ method of the parent class
-    #     pass
 
-    
     def email (self, email):
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if re.match(pattern, email):
@@ -27,7 +24,7 @@ class CheckCredentials (DisplayMessages):
     
     def password(self, password):
 
-        badPasswords = [
+        bad_passwords = [
         "123456",
         "12345678",
         "123456789",
@@ -43,9 +40,12 @@ class CheckCredentials (DisplayMessages):
         "000000",
         "Admin123",
         "********",
+        "qwerty",
+        "Qwerty",
+        "QWERTY"
         ]
 
-        if (len(password) < 6 or password in badPasswords):
+        if (len(password) < 6 or password in bad_passwords):
             return self.red ("Bad password!")
         return True
     

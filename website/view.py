@@ -2,23 +2,30 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from flask_login import login_required,  current_user
 from .models import Quiz, Results
 from . import db
+from .helpers import CheckCredentials
+
 view = Blueprint ('view', __name__)
 
 @view.route ("/", methods = ['GET', 'POST'])
 def join ():
+    forScripts = ""
+
     if (request.method == "POST"):
+
         session.clear()
         quiz_id = request.form.get ('quiz_id')
 
-        load_quiz = Quiz.query.filter_by(id = quiz_id)
+        load_quiz = Quiz.query.filter_by(id = quiz_id).first()
         if (load_quiz):
             return redirect(url_for('view.enter_nickname', quizid=quiz_id))  # Redirect to enter_nickname
-        
-            
-    return render_template ("join.html", user = current_user)
+        else:
+            checkCredentials = CheckCredentials ()
+            forScripts = checkCredentials.text (quiz_id)
+    return render_template ("join.html", user = current_user, forScripts = forScripts)
 
 @view.route ("/enter-nickname", methods = ['GET', 'POST'])
 def enter_nickname ():
+    forScripts = ""
     quiz_id = request.args.get ("quizid")
     
     if (session.get ('nickname') != None and quiz_id == session.get('quizid')):
@@ -32,12 +39,12 @@ def enter_nickname ():
         session['quizid'] = quiz_id
         session['nickname'] = nickname
         return quiz_page(load_quiz)
-    return render_template ("enter-nickname.html", user = current_user)
+    return render_template ("enter-nickname.html", user = current_user, forScripts = forScripts)
 
 
 @view.route ("/quiz", methods = ['GET', 'POST'])
 def quiz_page (quiz):
-
+    forScripts = ""
     total_score = session.get('total_score', 0)
     total_possible_score = session.get('total_possible_score', 0)
     question_live_id = session.get('question_live_id', 0)
@@ -93,8 +100,9 @@ def quiz_page (quiz):
         session['question_live_id'] = question_live_id
     
         
-    return render_template ("quiz.html", user = current_user, answers = answers, question = questions [question_live_id].content)
+    return render_template ("quiz.html", user = current_user, answers = answers, question = questions [question_live_id].content, forScripts = forScripts)
 
 def show_result(id, nickname, score):
+    forScripts = ""
     session.clear ()
-    return render_template ("result.html", id = id, nickname = nickname, score = score, user =current_user)
+    return render_template ("result.html", id = id, nickname = nickname, score = score, user =current_user, forScripts = forScripts)

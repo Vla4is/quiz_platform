@@ -12,11 +12,15 @@
     <link rel="stylesheet" href="/static/style.css">
     <!-- <script src="script.js"></script> -->
     <script type="text/javascript" src="{{ url_for('static', filename='script.js') }}"></script>
-
+    <script>
+        document.addEventListener("DOMContentLoaded", function () { {{forScripts}} } )
+    </script>
 </head>
 <body>
+
     <div class ="main">
-        <div class= "w-100 d-flex justify-content-around mb-3">
+        
+        <div class= "w-100 d-flex justify-content-around m-1">
             <a class="nav-link" href="/">Join quiz</a>
             {% if not user.is_authenticated%}
             <a class="nav-link" href="register">Register</a>
@@ -26,6 +30,7 @@
             <a class="nav-link" href="logout">Logout</a>
             {%endif%}
         </div>
+        <div id="errorArea" class="mb-2"></div>
 
         
         {%block content%}

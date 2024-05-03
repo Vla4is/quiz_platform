@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for
 from flask_login import login_user, login_required, logout_user, current_user
-from . import CheckCredentials, db
+from . import db
+from .helpers import CheckCredentials
 from .models import Quiz, Question, Answer, Results
 import json
 
@@ -9,6 +10,7 @@ quiz = Blueprint ('quiz', __name__)
 @quiz.route ("/manage", methods = ['GET', 'POST'])
 @login_required
 def manage ():
+    forScripts = ""
     quizOrder = 0
     if request.method == 'POST':
         
@@ -30,7 +32,7 @@ def manage ():
                 db.session.commit()
     
     
-    return render_template ("manage.html", user = current_user)
+    return render_template ("manage.html", user = current_user, forScripts=forScripts)
 
 @login_required
 @quiz.route ('/delete-quiz', methods = ['POST'])
@@ -49,6 +51,7 @@ def delete_note (): ##delete quiz
 @login_required
 @quiz.route ('/edit-questions', methods = ['POST', 'GET'])
 def edit_questions ():
+    forScripts=""
     quiz_id = request.args.get('quizid')
     # print(quiz_id)
     quiz = Quiz.query.get (quiz_id)
@@ -67,7 +70,7 @@ def edit_questions ():
             db.session.commit ()
             return redirect(url_for('quiz.edit_questions', quizid=quiz_id))
             ###END OF ADD NEW QUIZ
-        return render_template ("edit-questions.html", questions = questions, user = current_user, quiz_name = quiz.title)
+        return render_template ("edit-questions.html", questions = questions, user = current_user, quiz_name = quiz.title, forScripts=forScripts)
         #try to get data of questions
  
 # function deleteQuestion (quiz_id, question_id) {
@@ -109,6 +112,7 @@ def update_question ():
 @login_required
 @quiz.route ('/edit-answers', methods = ['POST', 'GET'])
 def edit_answers (): #edit answers page
+    forScripts=""
     question_id = request.args.get('questionid') #Get the question id
     question = Question.query.get (question_id) #get the quiestion
     if (not question) or question.user_id != current_user.id: #redirect if there is no quiz like this
@@ -126,7 +130,7 @@ def edit_answers (): #edit answers page
             db.session.commit () #commit the changes
             return redirect(url_for('quiz.edit_answers', questionid=question_id))
             ###END OF ADD NEW QUIZ 
-        return render_template ("edit-answers.html", answers = answers, user = current_user, question=question)
+        return render_template ("edit-answers.html", answers = answers, user = current_user, question=question, forScripts=forScripts)
         #try to get data of questions
 
 
@@ -170,6 +174,7 @@ def update_answer ():
 @login_required
 @quiz.route ('/results', methods = ['GET', 'POST'])
 def results ():
+    forScripts=""
     quiz_id = request.args.get ("quizid")
     # print (quiz_id)
     quiz = Quiz.query.get (quiz_id)
@@ -177,10 +182,11 @@ def results ():
         return redirect(url_for('quiz.join'))
     else:
         db.session.commit()
-        return render_template ("results.html", user = current_user, results = quiz.results, quiz = quiz) # results = quiz.resutls, quizname = quiz.title
+        return render_template ("results.html", user = current_user, results = quiz.results, quiz = quiz, forScripts="") # results = quiz.resutls, quizname = quiz.title
     
 @quiz.route ('/delete-result', methods = ['GET', 'POST'])
 def delete_result ():
+    
     quiz = json.loads (request.data)
     result_id = quiz ['result_id']
     quiz_id = quiz ['quiz_id']

@@ -3,10 +3,11 @@
     <form action="" class ="" method="post">
         <h1>Create an account</h1>
         <label for="email" class="mt-1">Email address</label>
-        <input type="email" class="form-control" id="email" placeholder="name@example.com" name="email">
+        <input type="email" class="form-control" id="email" placeholder="name@example.com" name="email" {%if entered_email %} value='{{entered_email}}'{%endif%}>
 
         <label for="email" class="mt-1">Nickname</label>
-        <input type="text" class="form-control" id="nickname" placeholder="Quiz user" name="nickname">
+        <input type="text" class="form-control" id="nickname" placeholder="Quiz user" name="nickname" {%if entered_nickname %} value='{{entered_nickname}}'{%endif%}>
+
 
         <label for="password" class="mt-1">Password</label>
         <input type="password" name="password" class="form-control" id="password" placeholder="Your Password">

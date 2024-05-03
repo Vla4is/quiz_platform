@@ -226,3 +226,17 @@ function deleteAnswer (question_id, answer_id) {
             goToQuizResults (quiz_id);
         });
     }
+
+    class Message {
+    
+        
+        static red(message) {
+
+            console.log (message)
+            document.getElementById('errorArea').innerHTML += `<span class='text-danger'>${message}</span><br>`;
+        }
+        static green(message) {
+            document.getElementById('errorArea').innerHTML += `<span class='text-success'>${message}</span><br>`;
+        }
+    }
+    // Message.red ("SAD")

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_user, login_required, logout_user, current_user
 from . import db
-from .helpers import CheckCredentials
+from .helpers import CheckCredentials, CheckDB
 from  .models import User
 auth = Blueprint ('auth', __name__)
 
@@ -21,7 +21,12 @@ def register ():
     if request.method == "POST":
 
         checkCredentials = checkCredentials.all (email, nickname, password)
-        
+        if (checkCredentials == True):
+            check_db = CheckDB()
+            email_exists = check_db.email (email)
+            if email_exists:
+                checkCredentials = email_exists
+
         if password == validate_password and request.method == "POST" and checkCredentials == True :
             #######################DONT FORGET TO DO PASSWORD HASH LATER####################
             #DISPLAY ERRORS!

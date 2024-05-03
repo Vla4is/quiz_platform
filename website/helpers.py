@@ -74,12 +74,11 @@ class CheckCredentials (DisplayMessages):
         else:
             return True  #   All validations passed, return True
                 
-class CheckDb (DisplayMessages): 
-    @staticmethod
+class CheckDB (DisplayMessages): 
     def email (self, eml):
-        user = User.query.filter_by (eml = eml).first()
+        user = User.query.filter_by (email = eml).first()
         if (user):
             return self.red ("User already exists")
         else:
-            return True
-            
+            return False
+

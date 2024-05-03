@@ -216,6 +216,7 @@ function deleteAnswer (question_id, answer_id) {
     }
     function goToQuizResults (quiz_id) {
         window.location.href = `results?quizid=${quiz_id}`;
+    
     }
 
     function deleteResult (result_id, quiz_id) {
@@ -224,6 +225,7 @@ function deleteAnswer (question_id, answer_id) {
             body: JSON.stringify ({result_id: result_id, quiz_id: quiz_id}),
         }).then ((_res) => {
             goToQuizResults (quiz_id);
+            
         });
     }
 

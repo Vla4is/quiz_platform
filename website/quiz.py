@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for
-from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import login_required, current_user
 from . import db
-from .helpers import CheckCredentials
-from .models import Quiz, Question, Answer, Results
+from .helpers import DisplayMessages
+from .models import Quiz, Question, Answer
 import json
 
 quiz = Blueprint ('quiz', __name__)
@@ -13,24 +13,22 @@ def manage ():
     forScripts = ""
     quizOrder = 0
     if request.method == 'POST':
-        
+    
         if (request.form.get ("quizname")): #add new quiz
             data = request.form.get ("quizname")
-            if (not CheckCredentials.text (data)):
-                return
             newQuiz = Quiz (title = data, user_id = current_user.id)
             db.session.add (newQuiz)
             db.session.commit ()
-            
-        if (request.form.get ("edit_quizname")):
+        elif (request.form.get ("edit_quizname")):
             quiz_id = request.form.get ("quiz_id")
             new_title = request.form.get ("edit_quizname")
             quiz = Quiz.query.filter_by(id = quiz_id , user_id=current_user.id).first()
             if quiz:
-                # Update the quiz title
                 quiz.title = new_title
                 db.session.commit()
-    
+        else:
+            dm = DisplayMessages ()
+            forScripts = dm.red ("Wrong input")
     
     return render_template ("manage.html", user = current_user, forScripts=forScripts)
 
@@ -61,38 +59,31 @@ def edit_questions ():
     else: #everything is fine and we can proceed to the question addition or edit
         questions = Question.query.filter_by(quiz_id = quiz_id).all()
         
-        if (request.form.get ("new_question")): #add new quiz
-            question = request.form.get ("new_question")
-            if (not CheckCredentials.text (question)):
-                return
-            new_question = Question (quiz_id = quiz_id, content = question, user_id = current_user.id)
-            db.session.add (new_question)
-            db.session.commit ()
-            return redirect(url_for('quiz.edit_questions', quizid=quiz_id))
+        if request.method == 'POST': #add new quiz
+            
+            if request.form.get ("new_question"):
+                question = request.form.get ("new_question")
+                new_question = Question (quiz_id = quiz_id, content = question, user_id = current_user.id)
+                db.session.add (new_question)
+                db.session.commit ()
+                return redirect(url_for('quiz.edit_questions', quizid=quiz_id))
+            else:
+                dm = DisplayMessages ()
+                forScripts = dm.red ("Wrong input")
             ###END OF ADD NEW QUIZ
         return render_template ("edit-questions.html", questions = questions, user = current_user, quiz_name = quiz.title, forScripts=forScripts)
         #try to get data of questions
- 
-# function deleteQuestion (quiz_id, question_id) {
-    
-#     fetch ("/delete-question", {
-#         method: "POST",
-#         body: JSON.stringify ({question_id: question_id, quiz_id: quiz_id}),
-#     }).then ((_res) => {
-#         window.location.href = editQuestions (quiz_id);
-#     });
-#     }
 
 @login_required
 @quiz.route ('/delete-question', methods = ['POST'])
 def delete_question ():
-    qust = json.loads (request.data)
-    qust_id = qust ['question_id']
+    question = json.loads (request.data)
+    question = question ['question_id']
     
-    qust = Question.query.get (qust_id)
+    question = Question.query.get (question)
     
-    if qust:
-        db.session.delete (qust)
+    if question:
+        db.session.delete (question)
         db.session.commit()
     return jsonify({})
 
@@ -120,15 +111,16 @@ def edit_answers (): #edit answers page
     
     else: #everything is fine and we can proceed to the question addition or edit
         answers = Answer.query.filter_by(question_id = question_id).all() ##get all the answers with this question id
-        
-        if (request.form.get ("new_answer")): #add new quiz
-            answer = request.form.get ("new_answer") #put into the variable
-            if (not CheckCredentials.text (answer)):
-                return
-            new_answer = Answer (question_id = question_id, content = answer, user_id = current_user.id, correct = False) #creation of new answer
-            db.session.add (new_answer) #add this answer into the qerstions
-            db.session.commit () #commit the changes
-            return redirect(url_for('quiz.edit_answers', questionid=question_id))
+        if request.method == 'POST':
+            if (request.form.get ("new_answer")): #add new quiz
+                answer = request.form.get ("new_answer") #put into the variable
+                new_answer = Answer (question_id = question_id, content = answer, user_id = current_user.id, correct = False) #creation of new answer
+                db.session.add (new_answer) #add this answer into the qerstions
+                db.session.commit () #commit the changes
+                return redirect(url_for('quiz.edit_answers', questionid=question_id))
+            else: 
+                dm = DisplayMessages ()
+                forScripts = dm.red ("Wrong input")
             ###END OF ADD NEW QUIZ 
         return render_template ("edit-answers.html", answers = answers, user = current_user, question=question, forScripts=forScripts)
         #try to get data of questions
@@ -185,14 +177,13 @@ def results ():
         return render_template ("results.html", user = current_user, results = quiz.results, quiz = quiz, forScripts="") # results = quiz.resutls, quizname = quiz.title
     
 @quiz.route ('/delete-result', methods = ['GET', 'POST'])
-def delete_result ():
+def delete_result (): #add here messages
     
     quiz = json.loads (request.data)
     result_id = quiz ['result_id']
     quiz_id = quiz ['quiz_id']
     quiz = Quiz.query.get (quiz_id)
 
-    
 
     if quiz and quiz.user_id == current_user.id:
         result_to_delete = None

@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from flask_login import login_required,  current_user
 from .models import Quiz, Results
 from . import db
-from .helpers import CheckCredentials
+from .helpers import CheckCredentials, DisplayMessages
 
 view = Blueprint ('view', __name__)
 
@@ -19,8 +19,13 @@ def join ():
         if (load_quiz):
             return redirect(url_for('view.enter_nickname', quizid=quiz_id))  # Redirect to enter_nickname
         else:
-            checkCredentials = CheckCredentials ()
-            forScripts = checkCredentials.text (quiz_id)
+            check_credentials = CheckCredentials ()
+            check_credentials = check_credentials.text (quiz_id)
+            if (check_credentials == True):
+                dm = DisplayMessages ()
+                forScripts = dm.red ("Wrong quiz pin")
+            else:
+                forScripts = check_credentials
     return render_template ("join.html", user = current_user, forScripts = forScripts)
 
 @view.route ("/enter-nickname", methods = ['GET', 'POST'])
@@ -28,17 +33,22 @@ def enter_nickname ():
     forScripts = ""
     quiz_id = request.args.get ("quizid")
     
-    if (session.get ('nickname') != None and quiz_id == session.get('quizid')):
+    if (session.get ('nickname') != None and quiz_id == session.get('quizid')): 
         load_quiz = Quiz.query.filter_by(id = quiz_id).first ()
         return quiz_page(load_quiz)
     else:
         session.clear ()
     if (request.method == "POST"):
         nickname = request.form.get ('nickname')
-        load_quiz = Quiz.query.filter_by(id = quiz_id).first ()
-        session['quizid'] = quiz_id
-        session['nickname'] = nickname
-        return quiz_page(load_quiz)
+        if (nickname):
+            load_quiz = Quiz.query.filter_by(id = quiz_id).first ()
+            session['quizid'] = quiz_id
+            session['nickname'] = nickname
+            return quiz_page(load_quiz)
+        else:
+            dm = DisplayMessages ()
+            forScripts = dm.red ("Please enter proper nickname")
+
     return render_template ("enter-nickname.html", user = current_user, forScripts = forScripts)
 
 

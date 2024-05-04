@@ -12,6 +12,7 @@ class DisplayMessages:
 
 class CheckCredentials (DisplayMessages):
 
+
     def email (self, email):
         pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
         if re.match(pattern, email):
@@ -20,10 +21,9 @@ class CheckCredentials (DisplayMessages):
             return self.red("Email represented in invalid format!")
 
 
-    
-    
-    def password(self, password):
-
+    def __is_password_bad (self, password):
+        if len (password) < 6:
+            return True
         bad_passwords = [
         "123456",
         "12345678",
@@ -44,8 +44,22 @@ class CheckCredentials (DisplayMessages):
         "Qwerty",
         "QWERTY"
         ]
+        if password in bad_passwords:
+            return True
+        
+        for i in range (len(password)-1):
+            if (password [i] != password [i+1]):
+                return False
+        
+        return True
 
-        if (len(password) < 6 or password in bad_passwords):
+            
+    
+    
+    def password(self, password):
+
+
+        if (self.__is_password_bad (password)):
             return self.red ("Bad password!")
         return True
     

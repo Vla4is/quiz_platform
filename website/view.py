@@ -68,7 +68,6 @@ def quiz_page (quiz):
         current_score = 0
         possible_score = 0
         for value in values:
-            print ("lo")
             if value == "1": value = True #convert to boolean
             else: value = False
             if answers [i].correct and value == True:

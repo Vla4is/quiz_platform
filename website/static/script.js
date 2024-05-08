@@ -85,6 +85,9 @@ function editQuestionClick (id) {
 }
 
 function deleteQuiz (quiz_id) {
+
+    var confirmed = confirm("Are you sure that you want to delete the quiz ?");
+    if (confirmed) {
     
     fetch ("/delete-quiz", {
         method: "POST",
@@ -92,6 +95,7 @@ function deleteQuiz (quiz_id) {
     }).then ((_res) => {
         window.location.href = "manage";
     });
+        }
     }
 
 function editQuestions (quiz_id) { //makes the url
@@ -99,12 +103,17 @@ function editQuestions (quiz_id) { //makes the url
 }
 
 function deleteQuestion (quiz_id, question_id) {
+    var confirmed = confirm("Are you sure that you want to delete the question ?");
+    if (confirmed) {
+
     fetch ("/delete-question", {
         method: "POST",
         body: JSON.stringify ({question_id: question_id}),
     }).then ((_res) => {
         editQuestions (quiz_id);
     });
+
+}   
     }
 
 function updateQuestion (quiz_id, question_id, num) {
@@ -155,12 +164,21 @@ function changeAnswer (id, answer_id, question_id, new_state) {
 }
 
 function deleteAnswer (question_id, answer_id) {
+
+    var confirmed = confirm("Are you sure that you want to delete the answer ?");
+    if (confirmed) {
+                
+            
+
     fetch ("/delete-answer", {
         method: "POST",
         body: JSON.stringify ({answer_id: answer_id}),
     }).then ((_res) => {
         goToAnswers (question_id);
     });
+
+        }
+
     }
 
     function editAnswerClick (id) {
@@ -168,6 +186,7 @@ function deleteAnswer (question_id, answer_id) {
         document.getElementsByClassName("edit_content") [id].style.display = "inline-block";
         document.getElementsByClassName ("submit_content") [id].style.display = "inline-block";
         document.getElementsByClassName ("edit_answer_button") [id].style.display = "none";
+        document.getElementById ("addAnswerForm").style.display = 'none'
     }
 
     function updateAnswer (question_id, answer_id, num) {
@@ -220,6 +239,9 @@ function deleteAnswer (question_id, answer_id) {
     }
 
     function deleteResult (result_id, quiz_id) {
+
+    var confirmed = confirm("Are you sure that you want to delete the result ?");
+    if (confirmed) {
         fetch ("/delete-result", {
             method: "POST",
             body: JSON.stringify ({result_id: result_id, quiz_id: quiz_id}),
@@ -227,6 +249,7 @@ function deleteAnswer (question_id, answer_id) {
             goToQuizResults (quiz_id);
             
         });
+    }
     }
 
     class Message {

@@ -13,22 +13,24 @@
     <form class="border border-warning m-3 p-3 rounded quiz" method="POST">
         <h3>{{answer.content}}</h3>
         <input type="text" class="form-control w-100 edit_content" name="edit_content" value="{{answer.content}}" id ="edit_content">
+        <button class="btn btn-outline-success submit_content btn-block mt-1" id ="submit_content" onclick="updateAnswer ({{answer.question_id}},{{answer.id}}, {{loop.index}})">Submit</button>
         <div class="buttonset">
-        <button class="btn btn-outline-success m-1 submit_content" id ="submit_content" onclick="updateAnswer ({{answer.question_id}},{{answer.id}}, {{loop.index}})">Submit</button>
-        <button class="btn btn-outline-info m-1 edit_answer_button " onclick="editAnswerClick ({{loop.index}})">Edit answer</button>
-        {%if answer.correct%}
-        <button class = "btn m-1 btn-success status_button" onclick ="statusButton ({{loop.index}}, {{question.id}}, {{answer.id}})">Correct</button>
-        {%else%}
-        <button class = "btn m-1 btn-danger status_button" onclick ="statusButton ({{loop.index}}, {{question.id}}, {{answer.id}})">Wrong</button>
-        {%endif%}
 
-        <button class="btn btn-outline-danger m-1 delete_answer_button" onclick ="deleteAnswer({{question.id}},{{answer.id}})">Delete</button>
+            {%if answer.correct%}
+            <button class = "btn btn-success status_button m-1" onclick ="statusButton ({{loop.index}}, {{question.id}}, {{answer.id}})">Correct</button>
+            {%else%}
+            <button class = "btn btn-danger status_button m-1" onclick ="statusButton ({{loop.index}}, {{question.id}}, {{answer.id}})">Wrong</button>
+            {%endif%}
+        
+        <button class="btn btn-outline-info edit_answer_button btn-block m-1" onclick="editAnswerClick ({{loop.index}})">Edit answer</button>
+        
+        <button class="btn btn-outline-danger delete_answer_button btn-block m-1" onclick ="deleteAnswer({{question.id}},{{answer.id}})">Delete</button>
         </div> 
     </form> 
     <script>defaultEditAnswersSettings ({{loop.index}})</script>
 {%endfor%}
 
-    <form action="" class ="w-100 p-3" method="post">
+    <form action="" class ="w-100 p-3" method="post" id="addAnswerForm">
         <input type="text" class="form-control w-100" name="new_answer" placeholder="My answer">
         <button type="submit" class="btn btn-outline-success mt-2 btn-block">Add new answer</button>
         

@@ -96,7 +96,10 @@ def quiz_page (quiz):
         question_live_id += 1 
     
         if question_live_id >= len (questions):
-            score = round (total_score*10/total_possible_score, 2)
+            score = 0
+            if total_score > 0 and total_possible_score > 0:
+                score = round (total_score*10/total_possible_score, 2)
+            
             new_result = Results (quiz_id = quiz.id, nickname = session ['nickname'], score = score) #creation of new answer
             db.session.add (new_result) #add this answer into the qerstions
             db.session.commit () #commit the changes

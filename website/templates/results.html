@@ -9,7 +9,7 @@
 <h1 class="msd">Results</h1>
     
         <h3>{{quiz.title}}</h3>
-        <button class="btn btn-outline-danger" onclick ="deleteResult('all', {{quiz.id}})">Delete all answers</button>
+        <button class="btn btn-outline-danger" onclick ="deleteResult('all', {{quiz.id}}, 1)">Delete all results</button>
         {%for result in results%}
     <div class="sanswer" id="sanswer">
         <div class="buttonset">

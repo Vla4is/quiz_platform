@@ -238,9 +238,14 @@ function deleteAnswer (question_id, answer_id) {
     
     }
 
-    function deleteResult (result_id, quiz_id) {
-
-    var confirmed = confirm("Are you sure that you want to delete the result ?");
+    function deleteResult (result_id, quiz_id, is_results = 0) {
+    let msg; 
+    if (is_results) {
+        msg = "Are you sure that you want to delete ALL the results ?";
+    }else {
+        msg = "Are you sure that you want to delete the result ?";
+    }
+    var confirmed = confirm(msg);
     if (confirmed) {
         fetch ("/delete-result", {
             method: "POST",

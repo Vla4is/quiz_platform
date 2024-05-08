@@ -75,6 +75,7 @@ function editNameClick (id) {
     document.getElementsByClassName("edit_name") [id].style.display = "inline-block";
     document.getElementsByClassName ("submit_name") [id].style.display = "inline-block";
     document.getElementsByClassName ("editname_button") [id].style.display = "none";
+    document.getElementById ("quizaddform").style.display = "none"
 }
 
 function editQuestionClick (id) {
@@ -82,6 +83,8 @@ function editQuestionClick (id) {
     document.getElementsByClassName("edit_content") [id].style.display = "inline-block";
     document.getElementsByClassName ("submit_content") [id].style.display = "inline-block";
     document.getElementsByClassName ("edit_question_button") [id].style.display = "none";
+    document.getElementById ("addquestionform").style.display = 'none'
+
 }
 
 function deleteQuiz (quiz_id) {

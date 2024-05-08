@@ -5,6 +5,7 @@ from .helpers import DisplayMessages
 from .models import Quiz, Question, Answer
 import json
 
+
 quiz = Blueprint ('quiz', __name__)
 
 @quiz.route ("/manage", methods = ['GET', 'POST'])
@@ -24,7 +25,7 @@ def manage ():
             newQuiz = Quiz (title = data, user_id = current_user.id)
             db.session.add (newQuiz)
             db.session.commit ()
-            forScripts = dm.green ("Quiz added successfully")
+            return redirect(url_for('quiz.edit_questions', quizid=newQuiz.id))
 
         elif (request.form.get ("edit_quizname")):
             quiz_id = request.form.get ("quiz_id")
@@ -83,8 +84,8 @@ def edit_questions ():
                 new_question = Question (quiz_id = quiz_id, content = question, user_id = current_user.id)
                 db.session.add (new_question)
                 db.session.commit ()
-                session ['for_scripts'] = dm.green ("Question added successfully")
-                return redirect(url_for('quiz.edit_questions', quizid=quiz_id))
+                return redirect(url_for('quiz.edit_answers', questionid=new_question.id))
+
             else:
                 forScripts = dm.red ("Wrong input")
             ###END OF ADD NEW QUIZ
@@ -214,7 +215,7 @@ def results ():
     else:
         db.session.commit()
         return render_template ("results.html", user = current_user, results = quiz.results, quiz = quiz, forScripts=forScripts) # results = quiz.resutls, quizname = quiz.title
-    
+  
 @quiz.route ('/delete-result', methods = ['GET', 'POST'])
 def delete_result (): #add here messages
     dm = DisplayMessages()

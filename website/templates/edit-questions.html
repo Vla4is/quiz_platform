@@ -7,23 +7,25 @@
 </script>
 
 
-<h1 class="msd">Quiz: {{quiz_name}}</h1>
+<h1 class="msd quiztitles">Quiz: {{quiz_name}}</h1>
 <h2>Questions</h2>
 {% for question in questions %}
     <form class="border border-success m-3 p-3 rounded quiz" method="POST">
-        <h3>{{question.content}}</h3>
+        <h3 class="quiztitles">{{question.content}}</h3>
         <input type="text" class="form-control w-100 edit_content" name="edit_content" value="{{question.content}}" id ="edit_content">
+
+        <button class="btn btn-outline-success submit_content btn-block mt-1" id ="submit_content" onclick="updateQuestion ({{question.quiz_id}},{{question.id}}, {{loop.index}})">Submit</button>
         <div class="buttonset">
-        <button class="btn btn-outline-success m-1 submit_content" id ="submit_content" onclick="updateQuestion ({{question.quiz_id}},{{question.id}}, {{loop.index}})">Submit</button>
-        <button class="btn btn-outline-info m-1 edit_question_button " onclick="editQuestionClick ({{loop.index}})">Edit question</button>
-        <button class="btn btn-outline-info m-1 edit_answers_button" onclick = "goToAnswers ({{question.id}})">Edit answers</button>
+        
+        <button class="btn btn-outline-dark m-1 edit_answers_button btn-block mr-2" onclick = "goToAnswers ({{question.id}})">Edit answers</button>
+        <button class="btn btn-outline-info m-1 edit_question_button btn-block" onclick="editQuestionClick ({{loop.index}})">Edit question</button>
         <button class="btn btn-outline-danger m-1 delete_question_button" onclick ="deleteQuestion({{question.quiz_id}},{{question.id}})">Delete</button>
         </div> 
     </form> 
     <script>defaultEditQuestionsSettings ({{loop.index}})</script>
 {%endfor%}
 
-    <form action="" class ="w-100 p-3" method="post">
+    <form action="" class ="w-100 p-3" method="post" id="addquestionform">
         <input type="text" class="form-control w-100" name="new_question" placeholder="My question">
         <button type="submit" class="btn btn-outline-success mt-2 btn-block">Add new question</button>
         

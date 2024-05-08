@@ -75,7 +75,10 @@ body {
     
     display: flex;
     flex-direction: row;
-    width: 400px;
+    
+    justify-content: center;
+    min-width: 400px; /* Set the minimum width to 400px */
+    width: auto;
     /* height: 50px; */
 } 
 
@@ -98,3 +101,18 @@ body {
     align-items: center;
 }
 
+.row-with-results {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.resultsButton {
+    height: 40px;
+    width:100px;
+}
+
+.quiztitles {
+    width:auto;
+    max-width: 950px;
+}

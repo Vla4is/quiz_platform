@@ -18,9 +18,9 @@
 
         <input type="text" class="form-control w-100 edit_name mt-2" name="edit_quizname" value="{{quiz.title}}" id ="edit_name">
         <div class = "m-1"><label for="quiz_id">Quiz id:</label><input type="text" class ="form-control" name="quiz_id" value="{{quiz.id}}" readonly></div>
-        <button class="btn btn-outline-success m-1 submit_name btn-block" id ="submit_name" onclick="">Submit</button>
+        <button class="btn btn-outline-success submit_name btn-block mb-1 mt-1" id ="submit_name" onclick="">Submit</button>
         <div class="buttonset">
-        <button class="btn btn-outline-success m-1 editquestions-button mr-2" onclick = "editQuestions({{quiz.id}})">Edit questions</button>
+        <button class="btn btn-outline-success m-1 editquestions-button" onclick = "editQuestions({{quiz.id}})">Edit questions</button>
 
         <button class="btn btn-outline-info m-1 editname_button" onclick ="editNameClick ({{loop.index}})" id="editname_button">Edit name</button>
         <button class="btn btn-outline-danger m-1 delete_button " onclick ="deleteQuiz ({{quiz.id}})">Delete</button>

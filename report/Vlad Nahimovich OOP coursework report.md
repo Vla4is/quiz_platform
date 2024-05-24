@@ -3,7 +3,6 @@
 **Introduction-**
 
 <br>The topic chosen is: “Quiz Platform”.
-
 <br>The platform allows users to register and create custom quizzes, and of course every user can participate in the quiz and get a result (grade from 0-10). The project contains a web interface designed in vanilla JS and bootstrap CSS.
 
 **Framework and requirements:**
@@ -30,7 +29,7 @@
 
 <br>![](Aspose.Words.827f9a02-fe78-45db-bd45-1d22f9015f7a.002.png)
 
-<br>Simple registration form. You will be required to enter email, nickname and password. There is an algorithm in behind which checks your input, it will not accept passwords such as 123456 or passwords shorter than 6 letters. As you can see in the picture, the errors will be displayed. This is <br>implemented with creation of Message class and checking class which inherits the Message class and outputs the error it found.
+<br>Simple registration form. You will be required to enter email, nickname and password. There is an algorithm in behind which checks your input, it will not accept passwords such as 123456 or passwords shorter than 6 letters. As you can see in the picture, the errors will be displayed. This is implemented with creation of Message class and checking class which inherits the Message class and outputs the error it found.
 
 <br>Login:
 
@@ -74,9 +73,9 @@
 
 <br>![](Aspose.Words.827f9a02-fe78-45db-bd45-1d22f9015f7a.008.png)
 
-<br>After the completion of the quiz, you will be redirected to the result page.![](Aspose.Words.827f9a02-fe78-45db-bd45-1d22f9015f7a.009.png)
+<br>After the completion of the quiz, you will be redirected to the result page.<br>![](Aspose.Words.827f9a02-fe78-45db-bd45-1d22f9015f7a.009.png)
 
-<br>The results may be managed from the control panel of the administrator of the quiz![](Aspose.Words.827f9a02-fe78-45db-bd45-1d22f9015f7a.010.png)
+<br>The results may be managed from the control panel of the administrator of the quiz<br>![](Aspose.Words.827f9a02-fe78-45db-bd45-1d22f9015f7a.010.png)
 
 
 
@@ -161,37 +160,35 @@ All the requirements fulfilled, the program is following Factory Method and Deco
 
 <br>Key findings:
 <br>Flask is decent framework, provides great infrastructure to create complex programs in efficient way and incredible speed.
+<br>Design patters:
+<br>Must be used for better code readability and increasing the development process.
 
-Design patters:
-Must be used for better code readability and increasing the development process.
+<br>OOP principles:
+<br>The principles should be understood and implemented everywhere. Also significantly increase the speed and make the bug hunting easier.
+<br>Planning:
+<br>Before writing the first line code we should plan and understand what we want to implement during the project. We must plan how the databases will look, how the frontend will communicate with backend and also which strategy to use to avoid unnecessary time wasting and issues. I drew it on paper and had an exact understanding how the application will look.
 
-OOP principles:
-The principles should be understood and implemented everywhere. Also significantly increase the speed and make the bug hunting easier.
+<br>Start with frontend:
+<br>Is extension to planning, personally, better to know how the application will look and which methods and strategies to use to implement the backend.
 
-Planning:
-Before writing the first line code we should plan and understand what we want to implement during the project. We must plan how the databases will look, how the frontend will communicate with backend and also which strategy to use to avoid unnecessary time wasting and issues. I drew it on paper and had an exact understanding how the application will look.
+<br>Avoid bugs:
+<br>Also part of planning, we have to ask questions such as:
+<br>What we need to check, or what can lead to unexpected behavior and what tools I have to develop the application.
 
-Start with frontend:
-Is extension to planning, personally, better to know how the application will look and which methods and strategies to use to implement the backend.
+<br>Write clean and use proper name conventions:
+<br>Writing clean code with good name conventions leading to better understanding of overall mechanism of the application and “feeling of connection” to the software you are creating.
 
-Avoid bugs:
-Also part of planning, we have to ask questions such as:
-What we need to check, or what can lead to unexpected behavior and what tools I have to develop the application.
+<br>**Extension of the application:**
+<br>1\. I want to add synchronous communication
+<br>2\. Add some non-mandatory functions in quiz management such as arrows back and forth, detailed review of the results (will be defined by administrator) and many more functions like this.
+<br>3\. Experimental launch to the internet, involving hosting and domain.
+<br>4\. Security – to avoid stuff like HSS attacks, and SQL penetration (The app is vulnerable, and the changes will not published on GitHub).
+<br>5\. Adding text answers, image selection, media player for selecting voice messages, adding speech recognition algorithms for answers and bunch of functions like this (we can also replicate duolingo), using this platform.
+<br>6\. Adding a page with quizzes made by the community (for example language).
+<br>7\. Addition of ML algorithms, supervised and unsupervised for variety of purposes.
 
-Write clean and use proper name conventions:
-Writing clean code with good name conventions leading to better understanding of overall mechanism of the application and “feeling of connection” to the software you are creating.
+<br>Overall, the app can be used in various scenarios and potentially overcome the competition with better UI and simplicity, the competitors charge money, their interfaces are more complex, we can more try to rely on the community, so users will be available to post their own quizzes on various topics.
 
-**Extension of the application:**
-1\. I want to add synchronous communication
-2\. Add some non-mandatory functions in quiz management such as arrows back and forth, detailed review of the results (will be defined by administrator) and many more functions like this.
-3\. Experimental launch to the internet, involving hosting and domain.
-4\. Security – to avoid stuff like HSS attacks, and SQL penetration (The app is vulnerable, and the changes will not published on GitHub).
-5\. Adding text answers, image selection, media player for selecting voice messages, adding speech recognition algorithms for answers and bunch of functions like this (we can also replicate duolingo), using this platform.
-6\. Adding a page with quizzes made by the community (for example language).
-7\. Addition of ML algorithms, supervised and unsupervised for variety of purposes.
-
-Overall, the app can be used in various scenarios and potentially overcome the competition with better UI and simplicity, the competitors charge money, their interfaces are more complex, we can more try to rely on the community, so users will be available to post their own quizzes on various topics.
-
-Thank you very much for reading my report, I will improve and start to extend the application, only 5% is done from those ideas I mentioned, but still it’s a good start for me.
+<br>Thank you very much for reading my report, I will improve and start to extend the application, only 5% is done from those ideas I mentioned, but still it’s a good start for me.
 
 

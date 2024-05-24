@@ -1,7 +1,6 @@
 ﻿**Vlad Nahimovich OOP coursework report**
 
 **Introduction-**
-
 <br>The topic chosen is: “Quiz Platform”.
 <br>The platform allows users to register and create custom quizzes, and of course every user can participate in the quiz and get a result (grade from 0-10). The project contains a web interface designed in vanilla JS and bootstrap CSS.
 
@@ -9,13 +8,12 @@
 <br>The project designed in Flask framework, coded mainly in python, html, css, regex, and JS.
 <br>In order to run the project you need to install:
 <br>Flask, Flask-Login, SQLalchemy simply write (pip install flask, pip install flask-login, pip install flask-sqlalchemy) 
-
 <br>And of course web browser will be essential<br>
 
 **How to use the program:**
 <br>The usage of the program generally isn’t complicated. The website includes pretty accessible interface.<br>
 
-<br>Homepage:<br>
+<br>**Homepage:**<br>
 
 ![](Aspose.Words.827f9a02-fe78-45db-bd45-1d22f9015f7a.001.png)
 
@@ -25,25 +23,25 @@
 
 
 
-<br>Registration:
+<br>**Registration:**
 
 <br>![](Aspose.Words.827f9a02-fe78-45db-bd45-1d22f9015f7a.002.png)
 
 <br>Simple registration form. You will be required to enter email, nickname and password. There is an algorithm in behind which checks your input, it will not accept passwords such as 123456 or passwords shorter than 6 letters. As you can see in the picture, the errors will be displayed. This is implemented with creation of Message class and checking class which inherits the Message class and outputs the error it found.
 
-<br>Login:
+<br>**Login:**
 
 <br>![](Aspose.Words.827f9a02-fe78-45db-bd45-1d22f9015f7a.003.png)
 
 <br>After the registration we have to login, checking and error handling also implemented.
 
-<br>Quiz creation:
+<br>**Quiz creation:**
 
 <br>![](Aspose.Words.827f9a02-fe78-45db-bd45-1d22f9015f7a.004.png)
 
 <br>After the user logs in we will be able to access his quiz manager, and create quiz. Messages with events displayed using the class Message in python. Quiz ID will be displayed, and you will able to access it by entering this id.
 
-<br>Question addition/edit:<br>
+<br>**Question addition/edit:**<br>
 
 <br>![](Aspose.Words.827f9a02-fe78-45db-bd45-1d22f9015f7a.005.png)
 
@@ -53,16 +51,11 @@
 
 
 
-<br>Answer addition/edit:<br>
-
+<br>**Answer addition/edit:**<br>
 ![](Aspose.Words.827f9a02-fe78-45db-bd45-1d22f9015f7a.006.png)
-
 <br>Similar interface to the question addition, but you can decide if the answer is correct or not. The program supports multiple choice, so you can add as many as possible correct and wrong answers.
-
 <br>Quiz itself-<br>
-
 <br>![](Aspose.Words.827f9a02-fe78-45db-bd45-1d22f9015f7a.007.png)
-
 <br>After entering the quiz PIN you will be required to enter a nickname, doesn’t matter if you’re logged in or not, because the nickname requirement in different organizations may differ.
 
 

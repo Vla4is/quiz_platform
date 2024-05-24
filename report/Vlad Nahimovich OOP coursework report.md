@@ -54,8 +54,9 @@
 <br>**Answer addition/edit:**<br>
 ![](Aspose.Words.827f9a02-fe78-45db-bd45-1d22f9015f7a.006.png)
 <br>Similar interface to the question addition, but you can decide if the answer is correct or not. The program supports multiple choice, so you can add as many as possible correct and wrong answers.
+
 <br>Quiz itself-<br>
-<br>![](Aspose.Words.827f9a02-fe78-45db-bd45-1d22f9015f7a.007.png)
+![](Aspose.Words.827f9a02-fe78-45db-bd45-1d22f9015f7a.007.png)
 <br>After entering the quiz PIN you will be required to enter a nickname, doesn’t matter if you’re logged in or not, because the nickname requirement in different organizations may differ.
 
 

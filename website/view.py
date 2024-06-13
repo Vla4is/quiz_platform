@@ -59,9 +59,11 @@ def quiz_page (quiz):
     total_possible_score = session.get('total_possible_score', 0)
     question_live_id = session.get('question_live_id', 0)
     
-    questions = quiz.questions 
-    
+    questions = quiz.questions
     answers = questions [question_live_id].answers
+    
+    
+    
     if request.method == "POST" and request.form.getlist ('single_answer'):
         values = request.form.getlist ('single_answer')
         i =0
@@ -94,6 +96,11 @@ def quiz_page (quiz):
             total_possible_score += 1
 
         question_live_id += 1 
+
+        
+        while (question_live_id < len(questions) and len (questions [question_live_id].answers) <= 0): #passing questions without answers.
+            question_live_id+=1
+
     
         if question_live_id >= len (questions):
             score = 0

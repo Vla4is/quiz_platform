@@ -107,12 +107,36 @@ body {
     justify-content: space-between;
     align-items: center;
 }
-.resultsButton {
-    height: 40px;
-    width:100px;
-}
+
 
 .quiztitles {
     width:auto;
     max-width: 950px;
+}
+
+#constructor_data {
+    width: 800px; /* Start with a fixed width of 800px */
+    max-width: 100%; /* Allow it to shrink when container width is less than 800px */
+    height: 800px; /* Fixed height of 800px */
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    margin-left: auto; /* Center align horizontally */
+    margin-right: auto; 
+}
+
+.dropdown_child {
+    display: none;
+    position:absolute;
+    margin-top: 40px;
+    width: 120px;
+    /* visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s ease; */
+}
+
+
+.dropdown_child:nth-child(1) {
+    margin-top: 40px;
+}
+
+.dropdown_child:nth-child(2) {
+    margin-top: 80px;
 }

@@ -273,3 +273,22 @@ function deleteAnswer (question_id, answer_id) {
         }
     }
     // Message.red ("SAD")
+
+    let showDropdownChildren =(id)=> {
+            // Select all elements with class "dropdown_child"
+        const dropdownChildren = document.querySelectorAll('.dropdown_id' + id);
+
+    // Loop through each element
+        dropdownChildren.forEach(element => {
+            if (element.style.display === 'inline') {
+            element.style.display = 'none';
+            } else {
+            element.style.display = 'inline';
+            }
+        });
+        
+    }
+
+    const goToConstructor = (quiz_id) => {
+        window.location.href = `constructor?quizid=${quiz_id}`;
+    } 

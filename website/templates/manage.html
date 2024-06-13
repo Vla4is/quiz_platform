@@ -12,9 +12,21 @@
     <form class="border border-info m-3 p-3 rounded quiz" method="POST" >
         <div class="row-with-results">
         <h4 class="quiztitles">{{quiz.title}}</h4>
-        <button type="button" class="btn btn-success btn-block resultsButton ml-4" onclick="goToQuizResults ({{quiz.id}})">Results</button>
+
+        <div class="d-flex flex-column">
+            <button type="button" class="btn btn-primary mb-1" style="width: 120px;" onclick="showDropdownChildren({{quiz.id}})">Options</button>
+            <button type="button" class="btn btn-success mb-1 dropdown_child resultsButton dropdown_id{{quiz.id}}" onclick="goToQuizResults ({{quiz.id}})">Results</button>
+            <button type="button" class="btn btn-success mb-1 dropdown_child dropdown_id{{quiz.id}}" onclick="goToConstructor ({{quiz.id}})">Constructor</button>
+        </div>
 
         </div>
+
+        <!-- <div class="d-flex flex-row m-2" >
+            <button type="button" class="btn btn-success resultsButton" onclick="goToQuizResults ({{quiz.id}})">Results</button>
+            <button type="button" class="btn btn-success ml-4" onclick="goToQuizResults ({{quiz.id}})">Constructor</button>
+            
+
+        </div> -->
 
         <input type="text" class="form-control w-100 edit_name mt-2" name="edit_quizname" value="{{quiz.title}}" id ="edit_name">
         <div class = "m-1"><label for="quiz_id">Quiz id:</label><input type="text" class ="form-control" name="quiz_id" value="{{quiz.id}}" readonly></div>

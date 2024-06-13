@@ -1,0 +1,17 @@
+
+{% extends "base.html" %} {% block title %} Edit answers {% endblock %}
+{%block content %}
+<script>
+    document.getElementsByTagName ('body')[0].style.height = "auto"
+    document.getElementsByTagName ('body')[0].style.width = "auto"
+   
+    </script>
+<h1>{{quiz.title}}</h1>
+<form method="POST">
+    <textarea name="constructor_data" id="constructor_data" class="form-control"></textarea>
+    <button type="submit" id="constructor_submit" class="btn btn-outline-success mt-2 btn-block">Submit</button>
+</form>
+
+
+{% endblock %}
+

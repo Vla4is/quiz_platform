@@ -24,6 +24,9 @@ def create_app ():
     from .auth import auth
     app.register_blueprint (auth, url_prefix= "/")
 
+    from .advanced import advanced ##THE NEW FEATURES BLUEPRINT
+    app.register_blueprint (advanced, url_prefix= "/")
+
 
     from .models import User
     create_database(app)

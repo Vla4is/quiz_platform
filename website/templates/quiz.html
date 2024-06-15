@@ -8,6 +8,11 @@
 
     <form method="POST" class ="w-100 p-3">
         <h2 class="msd">{{question}}</h2>
+        <div class="form-group w-100">
+            <h6>{{description_title}}</h6>
+            {%if description%}<textarea readonly class="form-control" rows="{{lines+1}}" style="background-color:  inherit; border: 1px solid black; padding: 0.5rem;">{{description}}</textarea> {%endif%}
+        </div>
+
         {%for answer in answers%}
         
         <button class="btn btn-outline-success mt-2 btn-block w-100 single_answer" onclick="clickOnAnswer ({{loop.index}})">{{answer.content}}</button>

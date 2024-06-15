@@ -15,6 +15,8 @@ class Question (db.Model):
     answers = db.relationship ("Answer")
     quiz_id = db.Column (db.Integer, db.ForeignKey ("quiz.id")) 
     user_id = db.Column (db.Integer, db.ForeignKey ('user.id')) #foreignKey ensures that we gave valid user id
+    description_title = db.Column (db.String (255))
+    description = db.Column (db.String (1000))
 
 class Answer (db.Model):
     id = db.Column (db.Integer, primary_key = True)

@@ -9,6 +9,7 @@
 <button class="btn btn-outline-info" onclick ="editQuestions ({{question.quiz_id}})">Back to questions</button>
 <h1 class="msd quiztitles">Question: {{question.content}}</h1>
 <h2>Answers</h2>
+<div class="d-flex flex-column">
 {% for answer in answers %}
     <form class="border border-dark m-3 p-3 rounded quiz" method="POST">
         <h3 class="quiztitles">{{answer.content}}</h3>
@@ -29,7 +30,7 @@
     </form> 
     <script>defaultEditAnswersSettings ({{loop.index}})</script>
 {%endfor%}
-
+</div>
     <form action="" class ="w-100 p-3" method="post" id="addAnswerForm">
         <input type="text" class="form-control w-100" name="new_answer" placeholder="My answer">
         <button type="submit" class="btn btn-outline-success mt-2 btn-block">Add new answer</button>

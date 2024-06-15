@@ -6,9 +6,10 @@
     document.getElementsByTagName ('body')[0].style.width = "auto"
    
     </script>
-<h1>{{quiz.title}}</h1>
+<button class="btn btn-outline-info mb-1" onclick ="editQuestions ({{quiz.id}})">Back to questions</button>
+<h1 style="max-width: 800px;">{{quiz.title}}</h1>
 <form method="POST">
-    <textarea name="constructor_data" id="constructor_data" class="form-control"></textarea>
+    <textarea name="constructor_data" id="constructor_data" class="form-control">{{text}}</textarea>
     <button type="submit" id="constructor_submit" class="btn btn-outline-success mt-2 btn-block">Submit</button>
 </form>
 

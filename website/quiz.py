@@ -89,7 +89,7 @@ def edit_questions ():
             else:
                 forScripts = dm.red ("Wrong input")
             ###END OF ADD NEW QUIZ
-        return render_template ("edit-questions.html", questions = questions, user = current_user, quiz_name = quiz.title, forScripts=forScripts)
+        return render_template ("edit-questions.html", questions = questions, user = current_user, quiz_name = quiz.title, forScripts=forScripts, quiz_id = quiz_id)
         #try to get data of questions
 
 @login_required

@@ -7,13 +7,12 @@
     </script>
 <h3>Hello, {{user.nickname}}</h3>
 <h1 class="msd">Manage quizzes</h1>
-
+<div class="d-flex flex-column">
 {% for quiz in user.quizzes %}
     <form class="border border-info m-3 p-3 rounded quiz" method="POST" >
         <div class="row-with-results">
         <h4 class="quiztitles">{{quiz.title}}</h4>
-
-        <div class="d-flex flex-column">
+        <div class="d-flex flex-column ml-5">
             <button type="button" class="btn btn-primary mb-1" style="width: 120px;" onclick="showDropdownChildren({{quiz.id}})">Options</button>
             <button type="button" class="btn btn-success mb-1 dropdown_child resultsButton dropdown_id{{quiz.id}}" onclick="goToQuizResults ({{quiz.id}})">Results</button>
             <button type="button" class="btn btn-success mb-1 dropdown_child dropdown_id{{quiz.id}}" onclick="goToConstructor ({{quiz.id}})">Constructor</button>
@@ -41,7 +40,7 @@
     </form>
     <script>defaultManageSettings ({{loop.index}})</script>
     {%endfor%}
-
+</div>
 
 <form action="" class ="w-100 p-3" method="post" id ="quizaddform">
     <input type="text" class="form-control w-100" name="quizname" placeholder="My quiz">

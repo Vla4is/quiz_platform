@@ -16,7 +16,17 @@
 {% for question in questions %}
     <form class="border border-success m-3 p-3 rounded quiz" method="POST">
         <h3 class="quiztitles">{{question.content}}</h3>
-        <input type="text" class="form-control w-100 edit_content" name="edit_content" value="{{question.content}}" id ="edit_content">
+
+        <div class="d-flex flex-column edit_set" id="edit_set" style="display: none!important;">
+        <label for="edit_content">Question:</label>
+        <input type="text" class="form-control w-100 edit_content" name="edit_content" value="{{question.content}}" id="edit_content" >
+        <label for="edit_description_title">Description title:</label>
+        <input type="text" class="form-control w-100 " name="edit_description_title" value="{{question.description_title}}" id ="edit_description_title">
+        <label for="edit_description">Description:</label>
+        <div class="grow-wrap">
+        <textarea class="form-control w-100 " name="edit_description" id ="edit_description" onInput="this.parentNode.dataset.replicatedValue = this.value" rows = "{{question.description.count('\n')+1}}">{{question.description}}</textarea>
+        </div>
+        </div>
 
         <button class="btn btn-outline-success submit_content btn-block mt-1" id ="submit_content" onclick="updateQuestion ({{question.quiz_id}},{{question.id}}, {{loop.index}})">Submit</button>
         <div class="buttonset">

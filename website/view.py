@@ -60,8 +60,15 @@ def quiz_page (quiz):
     question_live_id = session.get('question_live_id', 0)
     
     questions = quiz.questions
-    answers = questions [question_live_id].answers
     
+    while (question_live_id < len(questions)-1 and len (questions [question_live_id].answers) <= 0): #Checking the first questions
+         question_live_id+=1
+
+    if (len (questions [question_live_id].answers) <=0 and question_live_id == len(questions)-1): #if the quiz is empty
+            return show_result (0, session['nickname'], "'Empty quiz'")
+
+    answers = questions [question_live_id].answers
+
     
     
     if request.method == "POST" and request.form.getlist ('single_answer'):
@@ -98,10 +105,9 @@ def quiz_page (quiz):
         question_live_id += 1 
 
         
-        while (question_live_id < len(questions) and len (questions [question_live_id].answers) <= 0): #passing questions without answers.
+        while (question_live_id < len(questions) and len (questions [question_live_id].answers) <= 0): #passing questions without answers in the middle or end.
             question_live_id+=1
 
-    
         if question_live_id >= len (questions):
             score = 0
             if total_score > 0 and total_possible_score > 0:
@@ -118,8 +124,8 @@ def quiz_page (quiz):
         session['total_possible_score'] = total_possible_score
         session['question_live_id'] = question_live_id
     
-        
-    return render_template ("quiz.html", user = current_user, answers = answers, question = questions [question_live_id].content, forScripts = forScripts)
+    lines = questions [question_live_id].description.count('\n')
+    return render_template ("quiz.html", user = current_user, answers = answers, question = questions [question_live_id].content, forScripts = forScripts, description_title = questions [question_live_id].description_title, description = questions [question_live_id].description, lines = lines )
 
 def show_result(id, nickname, score):
     forScripts = ""

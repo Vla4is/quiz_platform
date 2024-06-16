@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from . import db
 from .helpers import DisplayMessages
 from .models import Quiz, Question, Answer
-from .constructor import t1_data_constructor
+from .constructor import T1Constructor
 advanced = Blueprint ('advanced', __name__)
 @advanced.route ("/constructor", methods = ['GET', 'POST'])
 @login_required
@@ -27,7 +27,7 @@ def constructor ():
         
         text = request.form.get ("constructor_data")
         
-        sorted_data = t1_data_constructor (text)
+        sorted_data = T1Constructor (text)
         # print (sorted_data)
         for set in sorted_data.items():
             question = set[1][0]
@@ -43,7 +43,7 @@ def constructor ():
                 question = question[2:]
             if question.endswith("**"):
                 question = question[:-2]
-            print (description_title, description)
+            
             new_question = Question (quiz_id = quiz_id, content = question, user_id = current_user.id, description_title = description_title, description = description)
             db.session.add (new_question)
             db.session.commit ()

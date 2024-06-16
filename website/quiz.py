@@ -81,7 +81,7 @@ def edit_questions ():
             
             if request.form.get ("new_question"):
                 question = request.form.get ("new_question")
-                new_question = Question (quiz_id = quiz_id, content = question, user_id = current_user.id)
+                new_question = Question (quiz_id = quiz_id, content = question, user_id = current_user.id, description = "", description_title = "")
                 db.session.add (new_question)
                 db.session.commit ()
                 return redirect(url_for('quiz.edit_answers', questionid=new_question.id))
@@ -115,10 +115,14 @@ def update_question ():
     dm = DisplayMessages ()
     question = json.loads (request.data)
     new_content = question ['new_value']
+    new_description_title = question ['new_description_title']
+    new_description = question ['new_description']
     question_id = question ['question_id']
     question = Question.query.get (question_id)
     if question:       # Update the question title
         question.content = new_content
+        question.description = new_description
+        question.description_title = new_description_title
         db.session.commit()
         session ['for_scripts'] = dm.green ("Question updated successfully")
 

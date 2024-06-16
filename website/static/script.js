@@ -27,11 +27,12 @@ function defaultManageSettings (id) {
 function defaultEditQuestionsSettings (id) {
     // 
     id -= 1
-    edit_content = document.getElementsByClassName("edit_content") [id];
+    edit_set = document.getElementsByClassName("edit_set") [id];
     submit_content = document.getElementsByClassName ("submit_content") [id];
     //setting the displays
     submit_content.style.display = "none";
-    edit_content.style.display = "none";
+    // edit_set.style.display = "none";
+    console.log (edit_set.style.display)
     
 
 
@@ -57,6 +58,7 @@ function defaultEditAnswersSettings (id) {
     submit_content.style.display = "none";
     edit_content.style.display = "none";
     
+    
     edit_content = document.getElementsByClassName("edit_answer_button") [id];
     edit_content.addEventListener('click', function(event) { event.preventDefault() }); //prevent the problem with the form
 
@@ -80,7 +82,7 @@ function editNameClick (id) {
 
 function editQuestionClick (id) {
     id -= 1;
-    document.getElementsByClassName("edit_content") [id].style.display = "inline-block";
+    document.getElementsByClassName("edit_set") [id].style.display = "inline-block";
     document.getElementsByClassName ("submit_content") [id].style.display = "inline-block";
     document.getElementsByClassName ("edit_question_button") [id].style.display = "none";
     document.getElementById ("addquestionform").style.display = 'none'
@@ -122,10 +124,13 @@ function deleteQuestion (quiz_id, question_id) {
 function updateQuestion (quiz_id, question_id, num) {
     num--;
     new_value = document.getElementsByName ("edit_content")[num].value
+    new_description = document.getElementsByName ("edit_description")[num].value
+    new_description_title = document.getElementsByName ("edit_description_title")[num].value
+    
     fetch ("/update-question", {
         
         method: "POST",
-        body: JSON.stringify ({question_id: question_id, new_value: new_value})
+        body: JSON.stringify ({question_id: question_id, new_value: new_value, new_description: new_description, new_description_title: new_description_title })
     }).then ((_res) => {
         editQuestions (quiz_id);
     });

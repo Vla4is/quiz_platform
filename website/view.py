@@ -58,6 +58,8 @@ def quiz_page (quiz):
     total_score = session.get('total_score', 0)
     total_possible_score = session.get('total_possible_score', 0)
     question_live_id = session.get('question_live_id', 0)
+    user_answers = session.get ('user_answers', [])
+    
     
     questions = quiz.questions
     
@@ -65,6 +67,7 @@ def quiz_page (quiz):
          question_live_id+=1
 
     if (len (questions [question_live_id].answers) <=0 and question_live_id == len(questions)-1): #if the quiz is empty
+           
             return show_result (0, session['nickname'], "'Empty quiz'")
 
     answers = questions [question_live_id].answers
@@ -72,11 +75,20 @@ def quiz_page (quiz):
     
     
     if request.method == "POST" and request.form.getlist ('single_answer'):
+        question_content = str (questions[question_live_id].content)
+        user_answers.append({question_content: {"user_answer": [], "correct_answers": []}}) #add the title inside the array
+        session['user_answers'] = user_answers
+        
+        # print (user_wrong_answers.encode('utf-8'))
+        
+
         values = request.form.getlist ('single_answer')
         i =0
         current_score = 0
         possible_score = 0
+        
         for value in values:
+            
             if value == "1": value = True #convert to boolean
             else: value = False
             if answers [i].correct and value == True:
@@ -84,10 +96,26 @@ def quiz_page (quiz):
                 possible_score+=1
 
             elif answers [i].correct:
+
                 possible_score += 1
 
             elif not answers [i].correct and value == True:
+                # print (session ['wrong_answers'])
+                # user_wrong_answers [user_wrong_answers.len()-1][question_content].append(answers[i].content) #add the content into array
+                # session['wrong_answers'] = user_wrong_answers
                 current_score-=2
+            
+            if value:
+                user_answers [len (user_answers)-1][question_content]["user_answer"].append (answers[i].content) #no need to add here the session application, but if there is a bug its maybe here
+            if answers[i].correct:
+                user_answers [len (user_answers)-1][question_content]["correct_answers"].append (answers[i].content) #no need to add here the session application, but if there is a bug its maybe here
+
+            # if answers [i].correct and value == False:
+            #     user_wrong_answers [len (user_wrong_answers)-1][question_content].append (answers[i].content) #no need to add here the session application, but if there is a bug its maybe here
+
+                # user_wrong_answers.append("532")
+                # session['wrong_answers'] = user_wrong_answers
+
                 
             i+=1
     
@@ -117,7 +145,7 @@ def quiz_page (quiz):
             db.session.add (new_result) #add this answer into the qerstions
             db.session.commit () #commit the changes
            
-            return show_result (new_result.id, session['nickname'], score)
+            return show_result (new_result.id, session['nickname'], score, session['user_answers'])
         answers = questions [question_live_id].answers
         
         session['total_score'] = total_score
@@ -127,7 +155,7 @@ def quiz_page (quiz):
     lines = questions [question_live_id].description.count('\n')
     return render_template ("quiz.html", user = current_user, answers = answers, question = questions [question_live_id].content, forScripts = forScripts, description_title = questions [question_live_id].description_title, description = questions [question_live_id].description, lines = lines )
 
-def show_result(id, nickname, score):
+def show_result(id, nickname, score, user_answers = []):
     forScripts = ""
     session.clear ()
-    return render_template ("result.html", id = id, nickname = nickname, score = score, user =current_user, forScripts = forScripts)
+    return render_template ("result.html", id = id, nickname = nickname, score = score, user =current_user, forScripts = forScripts, user_answers = user_answers)

@@ -9,6 +9,65 @@
     <div class ="w-100 p-3">
         <h2 class = 'msd'>Reuslt for {{nickname}}#{{id}}</h2>
         <h3 class="msd">Your score is: {{score}} of 10</h3>
+        
+        <!-- <h1>{{user_answers}}</h1> -->
+        
+                <!-- {% for wrong_answer in wrong_answers %}
+                    {% for question, user_answers in wrong_answer.items() %}
+                        {% for single_answer in user_answers %}
+                            <tr>
+                                <td>{{ question }}</td>
+                                <td>{{ single_answer }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %} -->
+                {% for answer in user_answers%}
+                            {%for question, values in answer.items()%}
+                                <div class="border p-3 m-3">
+                                <h1>{{question}}</h1>
+                                <!-- <h2>{{values}}</h2> -->
+                                <span class="h3">Your answer: </span>
+                                {%for user_answer in values ['user_answer'] %}
+                                    {%if user_answer in values ['correct_answers'] %}
+                                    <!-- <h3>{{values ['user_answer']}}</h3> -->
+                                    <div class="h3 text-success w-100 text-center border p-3 border-success rounded">{{user_answer}}</div>
+                                    {%else%}
+                                    <div class="h3 text-danger w-100 text-center border p-3 border-danger rounded">{{user_answer}} </div>
+                                    {%endif%}
+                                {%endfor%}
+                                <div>
+                                    <span class="h3">Correct answer: </span>
+                                    {%for correct_answer in values ['correct_answers']%}
+                                    <div class="h3 text-success w-100 text-center border p-3 border-success rounded">{{correct_answer}}</div>
+
+                                    {%endfor%}
+                                <!-- <div class="h3 text-success d-flex">{{','.join(values ['correct_answers'])}}</div> -->
+                                </div>
+                                
+                                <!-- {%if values ["user_answer"] == values ["correct_answers"] %}
+                                    <h3>correct</h3>
+                                {%endif%} -->
+
+                                
+
+                                <!-- {%for value in answer [question]["user_answer"]%}
+                
+
+                                <tr>
+                                    <td>{{question}}</td>
+                                    <td>{{value}}</td>
+                                    <td>{{answer [question] ["correct_answers"]}}</td>
+                                 <td>{{question_wrong_answers}}</td> 
+                                </tr>
+                                {%endfor%} 
+                                -->
+                            {%endfor%}
+                        </div>
+                {%endfor%}
+        </table>
+    
+
     </div>
 
 {% endblock %}

@@ -249,3 +249,8 @@ def delete_result (): #add here messages
         
     return jsonify({})
 
+@quiz.route ('/quiz-settings', methods = ['GET', 'POST'])
+def quiz_settings ():
+    
+     return render_template ("quiz-settings.html", user = current_user) # results = quiz.resutls, quizname = quiz.title
+  

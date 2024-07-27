@@ -96,3 +96,15 @@ class CheckDB (DisplayMessages):
         else:
             return False
 
+class CalculateGrade:
+    @staticmethod
+    def standart_decimal (maximum_grade, arr): #here if there are multiple choice question and you chose one wrong, no points
+        
+        single_question_grade = maximum_grade/len (arr)
+        grade = 0
+        for item in arr:
+            for question, values in item.items():
+                if (values ['correct_answer'] == values ['user_answer']):
+                    grade += single_question_grade
+        return grade
+            

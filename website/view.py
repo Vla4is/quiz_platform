@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from flask_login import current_user
 from .models import Quiz, Results
 from . import db
-from .helpers import CheckCredentials, DisplayMessages
+from .helpers import CheckCredentials, DisplayMessages, CalculateGrade
 
 view = Blueprint ('view', __name__)
 
@@ -29,14 +29,21 @@ def join ():
     return render_template ("join.html", user = current_user, forScripts = forScripts)
 
 @view.route ("/enter-nickname", methods = ['GET', 'POST'])
-def enter_nickname ():
+def enter_nickname (prev_nickname = False):
+    
+    if (prev_nickname):
+        
+        session ['nickname'] = prev_nickname
+    
     forScripts = ""
     quiz_id = request.args.get ("quizid")
     
-    if (session.get ('nickname') != None and quiz_id == session.get('quizid')): 
+    if (session.get ('nickname') != None and quiz_id): 
+        
         load_quiz = Quiz.query.filter_by(id = quiz_id).first ()
         return quiz_page(load_quiz)
     else:
+        
         session.clear ()
     if (request.method == "POST"):
         nickname = request.form.get ('nickname')
@@ -55,107 +62,88 @@ def enter_nickname ():
 @view.route ("/quiz", methods = ['GET', 'POST'])
 def quiz_page (quiz):
     forScripts = ""
-    total_score = session.get('total_score', 0)
-    total_possible_score = session.get('total_possible_score', 0)
     question_live_id = session.get('question_live_id', 0)
     user_answers = session.get ('user_answers', [])
-    
-    
     questions = quiz.questions
+
+    if (question_live_id >= len(questions)): #if the id of the question is more than the answers
+        return show_result (55, session['nickname'], 0)
     
-    while (question_live_id < len(questions)-1 and len (questions [question_live_id].answers) <= 0): #Checking the first questions
-         question_live_id+=1
-
-    if (len (questions [question_live_id].answers) <=0 and question_live_id == len(questions)-1): #if the quiz is empty
-           
-            return show_result (0, session['nickname'], "'Empty quiz'")
-
-    answers = questions [question_live_id].answers
 
     
+
+    if (len(questions) < 1): #in case no questions at all
+        return render_template ("undone-quiz.html", user = current_user)
     
+    
+    # def check_if_no_answers(question_live_id):
+    #     while (len (answers) < 1 and (question_live_id >= len(questions))): 
+    #         print ("while")
+    #         question_live_id+= 1
+    #         session ['question_live_id'] = question_live_id
+    # check_if_no_answers (question_live_id)
+        
+    
+    
+
     if request.method == "POST" and request.form.getlist ('single_answer'):
-        question_content = str (questions[question_live_id].content)
-        user_answers.append({question_content: {"user_answer": [], "correct_answers": []}}) #add the title inside the array
-        session['user_answers'] = user_answers
+        # print (request.form.getlist ('single_answer'))
+        #here i sort the answers, correct and the user answers
+        question_title = questions[question_live_id].content
+        user_answers.append  ({question_title : {"user_answer" : [], "correct_answer" :[]} }) #add an empty template
+
+        # user_answers[len (user_answers)-1][question_title]["user_answer"] = request.form.getlist ('single_answer') #add the user answer
+        #create the correct answers
+        for i in range (len (request.form.getlist ('single_answer'))): #we write the answers which user selected
+            if request.form.getlist ('single_answer') [i] == "1":
+                user_answers[len (user_answers)-1][question_title]["user_answer"].append (questions[question_live_id].answers [i].content)
+
+        for answer in questions [question_live_id].answers:
+            if (answer.correct):
+                user_answers[len (user_answers)-1] [question_title] ["correct_answer"].append (answer.content) #add the answer
+        question_live_id+=1 #adding one to the live id
+        session ["user_answers"] = user_answers
         
-        # print (user_wrong_answers.encode('utf-8'))
+        session ['question_live_id'] =  question_live_id
         
-
-        values = request.form.getlist ('single_answer')
-        i =0
-        current_score = 0
-        possible_score = 0
         
-        for value in values:
-            
-            if value == "1": value = True #convert to boolean
-            else: value = False
-            if answers [i].correct and value == True:
-                current_score+=1
-                possible_score+=1
-
-            elif answers [i].correct:
-
-                possible_score += 1
-
-            elif not answers [i].correct and value == True:
-                # print (session ['wrong_answers'])
-                # user_wrong_answers [user_wrong_answers.len()-1][question_content].append(answers[i].content) #add the content into array
-                # session['wrong_answers'] = user_wrong_answers
-                current_score-=2
-            
-            if value:
-                user_answers [len (user_answers)-1][question_content]["user_answer"].append (answers[i].content) #no need to add here the session application, but if there is a bug its maybe here
-            if answers[i].correct:
-                user_answers [len (user_answers)-1][question_content]["correct_answers"].append (answers[i].content) #no need to add here the session application, but if there is a bug its maybe here
-
-            # if answers [i].correct and value == False:
-            #     user_wrong_answers [len (user_wrong_answers)-1][question_content].append (answers[i].content) #no need to add here the session application, but if there is a bug its maybe here
-
-                # user_wrong_answers.append("532")
-                # session['wrong_answers'] = user_wrong_answers
-
-                
-            i+=1
+        
     
-        score_to_add = 0
+    if (question_live_id >= len (questions) ) :
+        grade = CalculateGrade.standart_decimal (10, user_answers)
+        new_result = Results (quiz_id = quiz.id, nickname = session ['nickname'], score = grade) #creation of new answer
+        db.session.add (new_result) #add this answer into the qerstions
+        db.session.commit () #commit the changes
         
-        if (possible_score > 0):
-            score_to_add = current_score/possible_score
+        return show_result (new_result.id, session['nickname'], grade)
 
-        if (score_to_add > 0):
-            total_score += score_to_add
-
-        if (possible_score>0):
-            total_possible_score += 1
-
-        question_live_id += 1 
-
-        
-        while (question_live_id < len(questions) and len (questions [question_live_id].answers) <= 0): #passing questions without answers in the middle or end.
-            question_live_id+=1
-
-        if question_live_id >= len (questions):
-            score = 0
-            if total_score > 0 and total_possible_score > 0:
-                score = round (total_score*10/total_possible_score, 2)
-            
-            new_result = Results (quiz_id = quiz.id, nickname = session ['nickname'], score = score) #creation of new answer
+    
+    while (not questions [question_live_id].answers): #checker if there is no answers
+        question_live_id+= 1
+        session ['question_live_id'] = question_live_id
+        if (question_live_id >= len(questions)):
+            grade = CalculateGrade.standart_decimal (10, user_answers)
+            new_result = Results (quiz_id = quiz.id, nickname = session ['nickname'], score = grade) #creation of new answer
             db.session.add (new_result) #add this answer into the qerstions
-            db.session.commit () #commit the changes
-           
-            return show_result (new_result.id, session['nickname'], score, session['user_answers'])
-        answers = questions [question_live_id].answers
-        
-        session['total_score'] = total_score
-        session['total_possible_score'] = total_possible_score
-        session['question_live_id'] = question_live_id
-    
-    lines = questions [question_live_id].description.count('\n')
-    return render_template ("quiz.html", user = current_user, answers = answers, question = questions [question_live_id].content, forScripts = forScripts, description_title = questions [question_live_id].description_title, description = questions [question_live_id].description, lines = lines )
+            db.session.commit ()
+            return show_result (55, session['nickname'], grade)
 
-def show_result(id, nickname, score, user_answers = []):
+
+    
+    
+    return render_template ("quiz.html", user = current_user, answers = questions[question_live_id].answers, question = questions [question_live_id].content, forScripts = forScripts, description_title = questions [question_live_id].description_title, description = questions [question_live_id].description)
+
+
+
+def show_result(id, nickname, score):
     forScripts = ""
-    session.clear ()
-    return render_template ("result.html", id = id, nickname = nickname, score = score, user =current_user, forScripts = forScripts, user_answers = user_answers)
+    quiz_id = request.args.get ("quizid")
+    # session.clear ()
+    if (request.method == "POST" and request.form.get ("retake_quiz")):
+            session ['question_live_id'] = 0
+            session ['user_answers'] =  []
+            return enter_nickname (True)
+            
+    
+
+    return render_template ("result.html", id = id, nickname = nickname, score = score, user =current_user, forScripts = forScripts, user_answers = session ['user_answers'])

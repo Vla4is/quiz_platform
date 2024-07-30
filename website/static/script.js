@@ -297,3 +297,11 @@ function deleteAnswer (question_id, answer_id) {
     const goToConstructor = (quiz_id) => {
         window.location.href = `constructor?quizid=${quiz_id}`;
     } 
+    const goTo = (domain, quiz_id = false) =>{
+        let quiz_id_var = ""
+        if (quiz_id){
+            quiz_id_var = `?quizid=${quiz_id}`;
+        }
+        window.location.href = domain+quiz_id_var;
+    }
+    

@@ -2,12 +2,43 @@
 {% extends "base.html" %} {% block title %}Join a quiz{% endblock %}
 {%block content %}
 
-        <form action="">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                <label class="form-check-label" for="flexCheckDefault">
-                  Default checkbox
-                </label>
-              </div>
-        </form>
+<form class ="w-100">
+  <h1>{{quizname}}</h1>
+  <div class="mb-3">
+      <label class="form-label">Select your interests:</label>
+      <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="interest1">
+          <label class="form-check-label" for="interest1">
+              Random questions
+          </label>
+      </div>
+      <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="interest2">
+          <label class="form-check-label" for="interest2">
+              Random answers
+          </label>
+      </div>
+      <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="interest3">
+          <label class="form-check-label" for="interest3">
+              Only logged in users
+          </label>
+      </div>
+      <div class="form-check">
+          <input class="form-check-input" type="checkbox" value="" id="interest4">
+          <label class="form-check-label" for="interest4">
+              Show the answers of the user
+          </label>
+      </div>
+
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="interest4">
+        <label class="form-check-label" for="interest4">
+            Allow retakes
+        </label>
+    </div>
+
+  </div>
+  <button type="submit" id="constructor_submit" class="btn btn-outline-success mt-2 btn-block">Submit</button>
+</form>
 {%endblock%}

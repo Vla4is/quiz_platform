@@ -14,8 +14,12 @@
         <h4 class="quiztitles">{{quiz.title}}</h4>
         <div class="d-flex flex-column ml-5">
             <button type="button" class="btn btn-primary mb-1" style="width: 120px;" onclick="showDropdownChildren({{quiz.id}})">Options</button>
+            
             <button type="button" class="btn btn-success mb-1 dropdown_child resultsButton dropdown_id{{quiz.id}}" onclick="goToQuizResults ({{quiz.id}})">Results</button>
+            <button type="button" class="btn btn-success mb-1 dropdown_child dropdown_id{{quiz.id}}" onclick="goTo ('quiz-settings', {{quiz.id}})">Settings</button>
             <button type="button" class="btn btn-success mb-1 dropdown_child dropdown_id{{quiz.id}}" onclick="goToConstructor ({{quiz.id}})">Constructor</button>
+            
+
         </div>
 
         </div>

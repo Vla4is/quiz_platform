@@ -249,8 +249,13 @@ def delete_result (): #add here messages
         
     return jsonify({})
 
+@login_required
 @quiz.route ('/quiz-settings', methods = ['GET', 'POST'])
 def quiz_settings ():
+    quiz_id = request.args.get('quizid')
+    quiz = Quiz.query.filter_by(id = quiz_id , user_id=current_user.id).first()
+    if (not quiz): #in addition we check if the quiz belongs to the user
+        return redirect(url_for('view.join'))
     
-     return render_template ("quiz-settings.html", user = current_user) # results = quiz.resutls, quizname = quiz.title
+    return render_template ("quiz-settings.html", user = current_user, quizname = quiz.title) # results = quiz.resutls, quizname = quiz.title
   

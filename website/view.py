@@ -126,7 +126,7 @@ def quiz_page (quiz):
             new_result = Results (quiz_id = quiz.id, nickname = session ['nickname'], score = grade) #creation of new answer
             db.session.add (new_result) #add this answer into the qerstions
             db.session.commit ()
-            return show_result (55, session['nickname'], grade)
+            return show_result (new_result.id, session['nickname'], grade)
 
 
     
@@ -142,7 +142,7 @@ def show_result(id, nickname, score):
     if (request.method == "POST" and request.form.get ("retake_quiz")):
             session ['question_live_id'] = 0
             session ['user_answers'] =  []
-            return enter_nickname (True)
+            return enter_nickname (nickname)
             
     
 

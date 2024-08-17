@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from flask_login import current_user
-from .models import Quiz, Results
+
+from .models import Quiz, Results, QuizSettings
 from . import db
-from .helpers import CheckCredentials, DisplayMessages, CalculateGrade
+from .helpers import CheckCredentials, DisplayMessages, CalculateGrade, QuizOrder
 
 view = Blueprint ('view', __name__)
 
@@ -40,18 +41,18 @@ def enter_nickname (prev_nickname = False):
     
     if (session.get ('nickname') != None and quiz_id): 
         
-        load_quiz = Quiz.query.filter_by(id = quiz_id).first ()
-        return quiz_page(load_quiz)
+        # load_quiz = Quiz.query.filter_by(id = quiz_id).first ()
+        return quiz_page()
     else:
         
         session.clear ()
     if (request.method == "POST"):
         nickname = request.form.get ('nickname')
         if (nickname):
-            load_quiz = Quiz.query.filter_by(id = quiz_id).first ()
+            
             session['quizid'] = quiz_id
             session['nickname'] = nickname
-            return quiz_page(load_quiz)
+            return redirect(url_for('view.quiz_page', quizid=quiz_id))
         else:
             dm = DisplayMessages ()
             forScripts = dm.red ("Please enter proper nickname")
@@ -60,20 +61,51 @@ def enter_nickname (prev_nickname = False):
 
 
 @view.route ("/quiz", methods = ['GET', 'POST'])
-def quiz_page (quiz):
+def quiz_page ():
+    if ("nickname" not in session):
+        return render_template ("error.html", user = current_user, error_type = "Unexpected error occured")
+    
     forScripts = ""
     question_live_id = session.get('question_live_id', 0)
+    print (question_live_id)
+    retake = session.get('retake', False)
     user_answers = session.get ('user_answers', [])
+    quiz_id = request.args.get ("quizid")
+    quiz = Quiz.query.filter_by(id = quiz_id).first ()
     questions = quiz.questions
+    
+    #setting the order of the quiz
 
-    if (question_live_id >= len(questions)): #if the id of the question is more than the answers
-        return show_result (55, session['nickname'], 0)
+    if ('question_order' not in session):
+        
+        if (quiz.settings.random_questions == "on"):
+            session['question_order'] = QuizOrder.random (len(quiz.questions))
+        else:
+            session['question_order'] = QuizOrder.regular (len(quiz.questions))
+
+    question_order = session['question_order']
+    
+    
+    if (quiz.settings.random_answers == "on"):
+        answer_order = QuizOrder.random (len(questions [question_live_id].answers))
+    else:
+        answer_order = QuizOrder.regular (len(questions [question_live_id].answers))
+
+    print (answer_order)
+
+
+    #end of setting the order of the quiz
+
+    # if (question_live_id >= len(questions)): #if the id of the question is more than the answers
+    #     print ("use case")
+    #     return show_result (55, session['nickname'], 0)
     
 
     
 
     if (len(questions) < 1): #in case no questions at all
-        return render_template ("undone-quiz.html", user = current_user)
+            return render_template ("error.html", user = current_user, error_type = "Administrator should complete the quiz")
+
     
     
     # def check_if_no_answers(question_live_id):
@@ -110,12 +142,21 @@ def quiz_page (quiz):
         
     
     if (question_live_id >= len (questions) ) :
-        grade = CalculateGrade.standart_decimal (10, user_answers)
-        new_result = Results (quiz_id = quiz.id, nickname = session ['nickname'], score = grade) #creation of new answer
-        db.session.add (new_result) #add this answer into the qerstions
-        db.session.commit () #commit the changes
-        
-        return show_result (new_result.id, session['nickname'], grade)
+        if ("result" not in session):
+            grade = CalculateGrade.standart_decimal (10, user_answers)
+            if (retake):
+                result = Results.query.get (retake[1])
+                result.score = grade
+            else:
+                result = Results (quiz_id = quiz.id, nickname = session ['nickname'], score = grade) #creation of new answer
+                db.session.add (result) #add this answer into the qerstions
+            db.session.commit () #commit the changes
+            session ["result"] = [result.id, result.nickname, result.score] #adding necessary data for the display 
+            return show_result (result.id, session['nickname'], grade)
+        else: #in this else statement you just have to reload previous result fixing the bug of the refresh and creation of new result.
+            return show_result (session ['result'][0] , session ['result'][1], session ['result'][2])
+
+            
 
     
     while (not questions [question_live_id].answers): #checker if there is no answers
@@ -123,27 +164,33 @@ def quiz_page (quiz):
         session ['question_live_id'] = question_live_id
         if (question_live_id >= len(questions)):
             grade = CalculateGrade.standart_decimal (10, user_answers)
+
             new_result = Results (quiz_id = quiz.id, nickname = session ['nickname'], score = grade) #creation of new answer
             db.session.add (new_result) #add this answer into the qerstions
             db.session.commit ()
+            session ["result"] = [new_result.id, new_result.nickname, new_result.score]
             return show_result (new_result.id, session['nickname'], grade)
-
-
-    
     
     return render_template ("quiz.html", user = current_user, answers = questions[question_live_id].answers, question = questions [question_live_id].content, forScripts = forScripts, description_title = questions [question_live_id].description_title, description = questions [question_live_id].description)
 
 
 
 def show_result(id, nickname, score):
+    
     forScripts = ""
     quiz_id = request.args.get ("quizid")
+    settings = QuizSettings.query.filter_by(quiz_id = quiz_id).first()
     # session.clear ()
     if (request.method == "POST" and request.form.get ("retake_quiz")):
             session ['question_live_id'] = 0
             session ['user_answers'] =  []
-            return enter_nickname (nickname)
+            session ['retake'] = [True, id]
             
-    
+            session.pop ("result")
+            return redirect(url_for('view.quiz_page', quizid=quiz_id))
 
-    return render_template ("result.html", id = id, nickname = nickname, score = score, user =current_user, forScripts = forScripts, user_answers = session ['user_answers'])
+            
+    user_answers = session.get ('user_answers', []) #we make this to check if there are answers at all.
+    if (len (user_answers) == 0):
+        return render_template ("undone-quiz.html", user = current_user)
+    return render_template ("result.html", id = id, nickname = nickname, score = score, user =current_user, forScripts = forScripts, user_answers = user_answers, settings = settings)

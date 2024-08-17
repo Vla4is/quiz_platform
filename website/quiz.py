@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, jsonify, redirect, url_fo
 from flask_login import login_required, current_user
 from . import db
 from .helpers import DisplayMessages
-from .models import Quiz, Question, Answer
+from .models import Quiz, Question, Answer, QuizSettings
 import json
 
 
@@ -23,6 +23,7 @@ def manage ():
         if (request.form.get ("quizname")): #add new quiz
             data = request.form.get ("quizname")
             newQuiz = Quiz (title = data, user_id = current_user.id)
+            newQuiz.settings = QuizSettings (quiz_id = newQuiz.id) #create new settings
             db.session.add (newQuiz)
             db.session.commit ()
             return redirect(url_for('quiz.edit_questions', quizid=newQuiz.id))
@@ -254,8 +255,37 @@ def delete_result (): #add here messages
 def quiz_settings ():
     quiz_id = request.args.get('quizid')
     quiz = Quiz.query.filter_by(id = quiz_id , user_id=current_user.id).first()
+    dm = DisplayMessages()
+    forScripts =""
+    
+    
     if (not quiz): #in addition we check if the quiz belongs to the user
         return redirect(url_for('view.join'))
     
-    return render_template ("quiz-settings.html", user = current_user, quizname = quiz.title) # results = quiz.resutls, quizname = quiz.title
+    if (request.method == 'POST' and request.form.get ("submit")):
+        
+        quiz.settings.random_questions= request.form.get ("random_questions")
+        quiz.settings.random_answers= request.form.get ("random_answers")
+        quiz.settings.only_logged_in= request.form.get ("only_logged_in")
+        quiz.settings.show_answers= request.form.get ("show_answers")
+        quiz.settings.allow_retakes= request.form.get ("allow_retakes")
+        db.session.commit()
+        forScripts = dm.green ("Updated succesfully")
+        
+
+    
+    checked = {
+        "random_questions" : "checked" if quiz.settings.random_questions == "on" else "",
+        "random_answers" : "checked" if quiz.settings.random_answers == "on" else "",
+        "only_logged_in" : "checked" if quiz.settings.only_logged_in == "on" else "",
+        "show_answers" : "checked" if quiz.settings.show_answers == "on" else "",
+        "allow_retakes" : "checked" if quiz.settings.allow_retakes == "on" else "",
+    }
+
+
+
+        
+        
+
+    return render_template ("quiz-settings.html", user = current_user, quizname = quiz.title, checked = checked, forScripts = forScripts) # results = quiz.resutls, quizname = quiz.title
   

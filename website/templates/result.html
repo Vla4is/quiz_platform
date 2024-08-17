@@ -41,11 +41,12 @@
         </table>
    
 
-        
+        {%if settings.allow_retakes == "on" : %}
         <form action="" class ="w-100 p-3" method="POST" id ="">
             <!-- <input type="text" name="retake_quiz" value="1"> -->
             <button  type="submit" name="retake_quiz" value="1" class="btn btn-outline-success mt-2 btn-block" >Retake</button>
         </form>
+        {%endif%}
 
     </div>
 

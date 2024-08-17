@@ -2,43 +2,54 @@
 {% extends "base.html" %} {% block title %}Join a quiz{% endblock %}
 {%block content %}
 
-<form class ="w-100">
+<form class ="w-100" method = "POST">
   <h1>{{quizname}}</h1>
+  <!-- <h3>{{settings}}</h3> -->
   <div class="mb-3">
       <label class="form-label">Select your interests:</label>
       <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="interest1">
-          <label class="form-check-label" for="interest1">
+          <input class="form-check-input" type="checkbox" name="random_questions" id="random_questions" {{checked ["random_questions"] }} >
+          <label class="form-check-label" for="random_questions">
               Random questions
           </label>
       </div>
       <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="interest2">
-          <label class="form-check-label" for="interest2">
+          <input class="form-check-input" type="checkbox" name="random_answers" id="random_answers" {{checked ["random_answers"] }}>
+          <label class="form-check-label" for="random_answers">
               Random answers
           </label>
       </div>
       <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="interest3">
-          <label class="form-check-label" for="interest3">
+          <input class="form-check-input" type="checkbox" name="only_logged_in" id="only_logged_in" {{checked ["only_logged_in"] }}>
+          <label class="form-check-label" for="only_logged_in">
               Only logged in users
           </label>
       </div>
       <div class="form-check">
-          <input class="form-check-input" type="checkbox" value="" id="interest4">
-          <label class="form-check-label" for="interest4">
+          <input class="form-check-input" type="checkbox" name="show_answers" id="show_answers" {{checked ["show_answers"] }}>
+          <label class="form-check-label" for="show_answers">
               Show the answers of the user
           </label>
       </div>
 
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" value="" id="interest4">
-        <label class="form-check-label" for="interest4">
+        <input class="form-check-input" type="checkbox" name="allow_retakes" id="allow_retakes" {{checked ["allow_retakes"] }}>
+        <label class="form-check-label" for="allow_retakes">
             Allow retakes
         </label>
     </div>
 
   </div>
-  <button type="submit" id="constructor_submit" class="btn btn-outline-success mt-2 btn-block">Submit</button>
+  <button type="submit" id="constructor_submit" class="btn btn-outline-success mt-2 btn-block" value="1" name="submit">Submit</button>
 </form>
+
+<script>
+    document.querySelectorAll('.form-check-input').forEach(element => {
+    element.addEventListener('change', () => {
+        document.getElementById ("errorArea").innerHTML = ""
+    });
+});
+
+</script>
+
 {%endblock%}

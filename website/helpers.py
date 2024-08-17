@@ -1,6 +1,6 @@
 from . import db
 from .models import User
-import re
+import re, random
 
 
 class DisplayMessages:
@@ -99,7 +99,8 @@ class CheckDB (DisplayMessages):
 class CalculateGrade:
     @staticmethod
     def standart_decimal (maximum_grade, arr): #here if there are multiple choice question and you chose one wrong, no points
-        
+        if (len(arr) == 0):
+            return -1
         single_question_grade = maximum_grade/len (arr)
         grade = 0
         for item in arr:
@@ -108,3 +109,11 @@ class CalculateGrade:
                     grade += single_question_grade
         return grade
             
+class QuizOrder:
+    @staticmethod
+    def regular (len):
+        return list(range(0, len))
+    @staticmethod
+    def random (len):
+        return random.sample(range(len), len)
+

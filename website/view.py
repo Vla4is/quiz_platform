@@ -67,7 +67,6 @@ def quiz_page ():
     
     forScripts = ""
     question_live_id = session.get('question_live_id', 0)
-    print (question_live_id)
     retake = session.get('retake', False)
     user_answers = session.get ('user_answers', [])
     quiz_id = request.args.get ("quizid")
@@ -86,12 +85,12 @@ def quiz_page ():
     question_order = session['question_order']
     
     
-    if (quiz.settings.random_answers == "on"):
-        answer_order = QuizOrder.random (len(questions [question_live_id].answers))
-    else:
-        answer_order = QuizOrder.regular (len(questions [question_live_id].answers))
+    if (quiz.settings.random_answers == "on" and question_live_id < len (questions)):
+        answer_order = QuizOrder.random (len(questions [question_order[question_live_id]].answers))
+    elif (question_live_id < len (questions)):
+        answer_order = QuizOrder.regular (len(questions [question_order[question_live_id]].answers))
 
-    print (answer_order)
+    
 
 
     #end of setting the order of the quiz
@@ -121,16 +120,16 @@ def quiz_page ():
     if request.method == "POST" and request.form.getlist ('single_answer'):
         # print (request.form.getlist ('single_answer'))
         #here i sort the answers, correct and the user answers
-        question_title = questions[question_live_id].content
+        question_title = questions[question_order[question_live_id]].content
         user_answers.append  ({question_title : {"user_answer" : [], "correct_answer" :[]} }) #add an empty template
 
         # user_answers[len (user_answers)-1][question_title]["user_answer"] = request.form.getlist ('single_answer') #add the user answer
         #create the correct answers
         for i in range (len (request.form.getlist ('single_answer'))): #we write the answers which user selected
             if request.form.getlist ('single_answer') [i] == "1":
-                user_answers[len (user_answers)-1][question_title]["user_answer"].append (questions[question_live_id].answers [i].content)
+                user_answers[len (user_answers)-1][question_title]["user_answer"].append (questions[question_order[question_live_id]].answers [i].content)
 
-        for answer in questions [question_live_id].answers:
+        for answer in questions [question_order[question_live_id]].answers:
             if (answer.correct):
                 user_answers[len (user_answers)-1] [question_title] ["correct_answer"].append (answer.content) #add the answer
         question_live_id+=1 #adding one to the live id
@@ -159,7 +158,7 @@ def quiz_page ():
             
 
     
-    while (not questions [question_live_id].answers): #checker if there is no answers
+    while (not questions [question_order[question_live_id]].answers): #checker if there is no answers
         question_live_id+= 1
         session ['question_live_id'] = question_live_id
         if (question_live_id >= len(questions)):
@@ -171,8 +170,11 @@ def quiz_page ():
             session ["result"] = [new_result.id, new_result.nickname, new_result.score]
             return show_result (new_result.id, session['nickname'], grade)
     
-    return render_template ("quiz.html", user = current_user, answers = questions[question_live_id].answers, question = questions [question_live_id].content, forScripts = forScripts, description_title = questions [question_live_id].description_title, description = questions [question_live_id].description)
+    return render_template ("quiz.html", user = current_user, answers = questions[question_order[question_live_id]].answers, question = questions [question_order[question_live_id]].content, forScripts = forScripts, description_title = questions [question_order[question_live_id]].description_title, description = questions [question_order[question_live_id]].description)
 
+def intensive_mode ():
+    if ("nickname" not in session):
+        return render_template ("error.html", user = current_user, error_type = "Unexpected error occured")
 
 
 def show_result(id, nickname, score):
@@ -185,7 +187,7 @@ def show_result(id, nickname, score):
             session ['question_live_id'] = 0
             session ['user_answers'] =  []
             session ['retake'] = [True, id]
-            
+            session.pop('question_order')
             session.pop ("result")
             return redirect(url_for('view.quiz_page', quizid=quiz_id))
 
@@ -194,3 +196,8 @@ def show_result(id, nickname, score):
     if (len (user_answers) == 0):
         return render_template ("undone-quiz.html", user = current_user)
     return render_template ("result.html", id = id, nickname = nickname, score = score, user =current_user, forScripts = forScripts, user_answers = user_answers, settings = settings)
+
+# class quiz_constructor:
+#     def check_nickname():
+#         if ("nickname" not in session):
+#             return render_template ("error.html", user = current_user, error_type = "Unexpected error occured")

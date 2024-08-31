@@ -8,8 +8,10 @@
 
     <div class ="w-100 p-3">
         <h2 class = 'msd'>Reuslt for {{nickname}}#{{id}}</h2>
+        {% if settings.show_grade == "on"%}
         <h3 class="msd">Your score is: {{score}} of 10</h3>    
-
+        {%endif%}
+        {% if settings.show_answers == "on"%}
                 {% for answer in user_answers%}
                             {%for question, values in answer.items()%}
                                 <div class="border p-3 m-3">
@@ -38,7 +40,7 @@
                             {%endfor%}
                         </div>
                 {%endfor%}
-        </table>
+        {%endif%}
    
 
         {%if settings.allow_retakes == "on" : %}

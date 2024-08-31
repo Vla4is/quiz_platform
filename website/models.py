@@ -15,8 +15,9 @@ class QuizSettings (db.Model):
     random_questions = db.Column(db.String(5), default = "None")
     random_answers= db.Column(db.String(5), default = "None")
     only_logged_in=  db.Column(db.String(5), default = "None")
-    show_answers = db.Column(db.String(5), default = "None")
-    allow_retakes = db.Column(db.String(5), default = "None")
+    show_answers = db.Column(db.String(5), default = "on")
+    allow_retakes = db.Column(db.String(5), default = "on")
+    show_grade = db.Column(db.String(5), default = "on")
 
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)

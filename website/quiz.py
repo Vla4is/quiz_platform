@@ -269,6 +269,7 @@ def quiz_settings ():
         quiz.settings.only_logged_in= request.form.get ("only_logged_in")
         quiz.settings.show_answers= request.form.get ("show_answers")
         quiz.settings.allow_retakes= request.form.get ("allow_retakes")
+        quiz.settings.show_grade = request.form.get ("show_grade")
         db.session.commit()
         forScripts = dm.green ("Updated succesfully")
         
@@ -280,6 +281,7 @@ def quiz_settings ():
         "only_logged_in" : "checked" if quiz.settings.only_logged_in == "on" else "",
         "show_answers" : "checked" if quiz.settings.show_answers == "on" else "",
         "allow_retakes" : "checked" if quiz.settings.allow_retakes == "on" else "",
+        "show_grade" : "checked" if quiz.settings.show_grade == "on" else "",
     }
 
 
